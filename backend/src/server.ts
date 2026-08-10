@@ -5,6 +5,7 @@ import { createStore, Domain, StoredCert } from './store.js';
 import { generateSalt, hashCertificate, verifyCertificate } from './hashing.js';
 import { createV1Router } from './v1compat.js';
 import { createNearClient } from './near.js';
+import { createAuthRouter } from './auth.js';
 
 /*
   FRESH API LAYER (Phase 2.3).
@@ -41,6 +42,9 @@ app.use(express.json({ limit: '10mb' }));
 
 // Backwards-compatible /api/v1/* routes for the merged app's Birth section.
 app.use('/api/v1', createV1Router(store));
+
+// Wallet login (NEP-413 challenge/verify): GET /auth/nonce, POST /auth/verify.
+app.use('/auth', createAuthRouter());
 
 function parseDomain(raw: string): Domain | null {
   const d = raw.toUpperCase();

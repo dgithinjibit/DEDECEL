@@ -10,7 +10,7 @@ import { useWallet } from './WalletContext';
 */
 
 export const WalletLogin: React.FC = () => {
-  const { connect, isConnecting, isRealWallet } = useWallet();
+  const { connect, isConnecting, isRealWallet, authError } = useWallet();
   const [accountId, setAccountId] = useState('');
 
   const handleConnect = () => {
@@ -65,18 +65,50 @@ export const WalletLogin: React.FC = () => {
             className="w-full rounded-lg bg-brand-600 hover:bg-brand-500 disabled:opacity-60
                        disabled:cursor-not-allowed text-white font-semibold py-3 transition-colors"
           >
-            {isConnecting ? 'Connecting…' : 'Connect Wallet'}
+            {isConnecting ? 'Waiting for wallet…' : 'Connect Wallet'}
           </button>
+
+          {/* Login error (e.g. user rejected the signature, or key isn't full-access). */}
+          {authError && (
+            <p className="text-[11px] text-rose-400 mt-3 leading-relaxed">
+              {authError}
+            </p>
+          )}
 
           <p className="text-[11px] text-slate-500 mt-5 leading-relaxed">
             {isRealWallet
-              ? 'Opens the HOT Wallet popup to sign in with your NEAR account.'
-              : 'Demo mode connects a simulated wallet. Set VITE_USE_REAL_WALLET=true for real HOT Wallet sign-in.'}
+              ? 'Opens your NEAR wallet (installed wallets appear first). You’ll approve a free signature to prove the account is yours — no gas, no transaction.'
+              : 'Demo mode connects a simulated wallet (not a real login). Set VITE_USE_REAL_WALLET=true for real NEAR sign-in.'}
           </p>
+
+          {/* No wallet? Offer a way to get one. Shown only in real mode. */}
+          {isRealWallet && (
+            <p className="text-[11px] text-slate-500 mt-3 leading-relaxed">
+              Don’t have a NEAR wallet yet?{' '}
+              <a
+                href="https://chromewebstore.google.com/detail/hot-wallet/mpobfbnegdfjnpmojpdfdkdhkmecfhpn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-400 hover:text-brand-300 underline"
+              >
+                Get the HOT Wallet extension
+              </a>
+              {' '}or{' '}
+              <a
+                href="https://www.mynearwallet.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-400 hover:text-brand-300 underline"
+              >
+                use MyNearWallet
+              </a>
+              {' '}(no install).
+            </p>
+          )}
         </div>
 
         <p className="text-center text-[11px] text-slate-600 mt-6">
-          NEAR testnet · $0 demo environment
+          NEAR {isRealWallet ? 'testnet' : 'demo'} · $0 environment
         </p>
       </div>
     </div>

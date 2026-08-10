@@ -32,7 +32,7 @@ import { BirthApp } from './birth/BirthApp';
 type CertDomain = 'DEATH' | 'BIRTH';
 
 export default function App() {
-  const { isConnected, accountId, disconnect } = useWallet();
+  const { isAuthenticated, accountId, disconnect } = useWallet();
 
   // Domain switch (Death = original DEDECEL; Birth = folded-in DeBiCeL, ported in Phase 1.3).
   const [domain, setDomain] = useState<CertDomain>('DEATH');
@@ -229,8 +229,9 @@ export default function App() {
     }
   };
 
-  // Wallet gate: until a wallet is connected, show only the login screen.
-  if (!isConnected) {
+  // Wallet gate: until the wallet is connected AND verified (real signature), show only the
+  // login screen. Merely connecting is not enough — the backend must confirm account ownership.
+  if (!isAuthenticated) {
     return <WalletLogin />;
   }
 

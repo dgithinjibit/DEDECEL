@@ -22,6 +22,7 @@ export default defineConfig(() => {
       proxy: {
         '/api/v1': { target: 'http://localhost:4000', changeOrigin: true },
         '/v2': { target: 'http://localhost:4000', changeOrigin: true },
+        '/auth': { target: 'http://localhost:4000', changeOrigin: true },
       },
     },
   };

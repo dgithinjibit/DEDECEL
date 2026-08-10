@@ -10,13 +10,15 @@
     "test:hash": "tsx src/hashing.test.ts",
     "test:store": "tsx src/store.test.ts",
     "test:api": "tsx src/api.test.ts",
-    "test:all": "npm run test:hash && npm run test:store && npm run test:api",
+    "test:auth": "tsx src/auth.test.ts",
+    "test:all": "npm run test:hash && npm run test:store && npm run test:api && npm run test:auth",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "@near-wallet-selector/core": "^10.1.4",
     "@supabase/supabase-js": "^2.45.4",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
