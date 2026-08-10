@@ -1,18 +1,4 @@
 import React from 'react';
-import { 
-  Activity, 
-  Boxes, 
-  ShieldCheck, 
-  ShieldAlert, 
-  RefreshCw, 
-  Database, 
-  Cpu, 
-  Lock, 
-  Globe2, 
-  CheckCircle2, 
-  AlertOctagon,
-  Flame
-} from 'lucide-react';
 import { Block, DeathCertificate, JurisdictionMode } from '../../types';
 
 interface SystemAuditorProps {
@@ -40,8 +26,8 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
       {/* Banner */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
-            <Activity className="w-7 h-7" />
+          <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0 font-bold text-sm">
+            SEC
           </div>
           <div>
             <h1 className="text-xl font-bold text-white">Smart Contract & Blockchain Security Console</h1>
@@ -56,7 +42,6 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
             onClick={onResetGenesis}
             className="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3.5 py-2 rounded-none text-xs font-semibold transition flex items-center gap-1.5"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
             <span>Reset Ledger to Genesis State</span>
           </button>
         </div>
@@ -72,7 +57,7 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
             isChainValid ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
           }`}>
-            {isChainValid ? <ShieldCheck className="w-7 h-7" /> : <ShieldAlert className="w-7 h-7" />}
+            {isChainValid ? <span className="font-bold text-sm">OK</span> : <span className="font-bold text-lg">!</span>}
           </div>
           <div>
             <h2 className={`text-base font-bold ${isChainValid ? 'text-emerald-300' : 'text-rose-300'}`}>
@@ -88,7 +73,6 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
           className="bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40 px-4 py-2.5 rounded-none text-xs font-bold transition flex items-center gap-2 shrink-0"
           title="Corrupt Block #1 payload to test automatic Merkle root hash verification failure"
         >
-          <Flame className="w-4 h-4 text-rose-400" />
           <span>Simulate Malicious Tamper Attack (Block #1)</span>
         </button>
       </div>
@@ -98,7 +82,6 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
           <div className="flex items-center justify-between text-slate-400 text-xs">
             <span>Block Height</span>
-            <Boxes className="w-4 h-4 text-cyan-400" />
           </div>
           <p className="text-2xl font-bold text-white mt-2">#{blocks.length}</p>
           <p className="text-[10px] text-slate-500 mt-1">Total Mined Blocks</p>
@@ -107,7 +90,6 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
           <div className="flex items-center justify-between text-slate-400 text-xs">
             <span>Indexed Certificates</span>
-            <Database className="w-4 h-4 text-indigo-400" />
           </div>
           <p className="text-2xl font-bold text-white mt-2">{certificates.length}</p>
           <p className="text-[10px] text-slate-500 mt-1">Encrypted Records</p>
@@ -116,7 +98,6 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
           <div className="flex items-center justify-between text-slate-400 text-xs">
             <span>Validator Consensus</span>
-            <Cpu className="w-4 h-4 text-emerald-400" />
           </div>
           <p className="text-2xl font-bold text-emerald-400 mt-2">4 Nodes</p>
           <p className="text-[10px] text-slate-500 mt-1">Byzantine Fault Tolerant</p>
@@ -125,7 +106,6 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
         <div className="bg-slate-900 border border-slate-800 p-4 rounded-2xl">
           <div className="flex items-center justify-between text-slate-400 text-xs">
             <span>Sovereignty Regime</span>
-            <Globe2 className="w-4 h-4 text-amber-400" />
           </div>
           <p className="text-lg font-bold text-amber-300 mt-2 truncate">{jurisdiction}</p>
           <p className="text-[10px] text-slate-500 mt-1">Active Privacy Standard</p>

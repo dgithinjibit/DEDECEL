@@ -1,0 +1,14 @@
+# Netlify config for the DEDECEL static frontend (Vite single-page app).
+# Deploy: connect this repo in Netlify and set the base directory to "DEDECEL/".
+# At build time, set the env var VITE_USE_REAL_BACKEND=true and VITE_API_BASE_URL to your
+# backend's URL (see .env.example / HOW-IT-FITS.md).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# SPA fallback: every path serves index.html so client-side routing / deep links don't 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

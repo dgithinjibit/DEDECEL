@@ -6,3 +6,12 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Rust / NEAR contract build artifacts (contract/target can be multiple GB)
+target/
+contract/target/
+**/*.rs.bk
+
+# Local editor / OS cruft
+.idea/
+.vscode/

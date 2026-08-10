@@ -1,0 +1,36 @@
+# Render.com blueprint for the DEDECEL off-chain backend (free web service).
+# Deploy: in Render, "New +" -> "Blueprint" -> point at this repo. Render reads this file.
+# (Render's free tier sleeps after ~15 min idle and cold-starts on the next request — fine for
+#  a demo. The frontend's real-backend calls will just be slow on the first hit after a nap.)
+
+services:
+  - type: web
+    name: dedecel-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /v2/health
+    envVars:
+      # REQUIRED: long random secret for hashing. Generate once, then keep it forever.
+      #   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+      - key: DEDECEL_HASH_PEPPER
+        sync: false
+      # Frontend origin(s) allowed to call this API (comma-separated). Set after the frontend deploys.
+      - key: CORS_ORIGINS
+        sync: false
+      # Off-chain PII store (leave unset to use the in-memory store — data resets on restart).
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      # NEAR anchoring (leave unset to run in disabled mode -> local: placeholder tx ids).
+      - key: NEAR_NETWORK
+        value: testnet
+      - key: NEAR_CONTRACT_ID
+        sync: false
+      - key: NEAR_SIGNER_ACCOUNT_ID
+        sync: false
+      - key: NEAR_SIGNER_PRIVATE_KEY
+        sync: false

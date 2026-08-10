@@ -1,7 +1,6 @@
 import React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { jsPDF } from 'jspdf';
-import { Download, Award, X, ShieldCheck, FileText, CheckCircle2 } from 'lucide-react';
 import { DeathCertificate } from '../types';
 
 interface CertificatePDFGeneratorProps {
@@ -110,13 +109,13 @@ export const CertificatePDFGenerator: React.FC<CertificatePDFGeneratorProps> = (
           onClick={onClose}
           className="absolute top-6 right-6 text-slate-400 hover:text-white bg-slate-800 p-2 rounded-none transition"
         >
-          <X className="w-5 h-5" />
+          Close
         </button>
 
         {/* Certificate Header Display */}
         <div className="text-center space-y-2 border-b border-slate-800 pb-6">
-          <div className="w-12 h-12 border rounded-2xl flex items-center justify-center mx-auto bg-cyan-500/10 border-cyan-500/30 text-cyan-400">
-            <Award className="w-7 h-7" />
+          <div className="w-12 h-12 border rounded-2xl flex items-center justify-center mx-auto bg-cyan-500/10 border-cyan-500/30 text-cyan-400 font-bold text-sm">
+            DC
           </div>
           <h2 className="text-xl font-extrabold text-white tracking-tight">
             OFFICIAL DIGITAL DEATH CERTIFICATE
@@ -168,7 +167,6 @@ export const CertificatePDFGenerator: React.FC<CertificatePDFGeneratorProps> = (
           <div className="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl flex items-center justify-between gap-3">
             <div className="space-y-0.5">
               <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Cross-Ledger Birth Hash Verified</span>
               </div>
               <p className="font-mono text-[10px] text-slate-300">
@@ -184,7 +182,6 @@ export const CertificatePDFGenerator: React.FC<CertificatePDFGeneratorProps> = (
           <div className="border-t border-slate-800 pt-4 flex items-center justify-between gap-4">
             <div className="space-y-1 font-mono text-[10px]">
               <div className="flex items-center gap-1 text-emerald-400 font-bold">
-                <ShieldCheck className="w-4 h-4" />
                 <span>STATE SEAL: ON-CHAIN IMMUTABLE</span>
               </div>
               <p className="text-slate-400">Block #{cert.blockNumber || 1} • Tx: {cert.blockchainTxHash?.substring(0, 20)}...</p>
@@ -210,7 +207,6 @@ export const CertificatePDFGenerator: React.FC<CertificatePDFGeneratorProps> = (
             onClick={handleDownloadPDF}
             className="px-6 py-2.5 rounded-none font-bold text-xs transition shadow-lg flex items-center gap-2 text-slate-950 bg-cyan-500 hover:bg-cyan-400"
           >
-            <Download className="w-4 h-4" />
             <span>Download Official PDF Certificate</span>
           </button>
         </div>

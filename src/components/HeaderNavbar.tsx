@@ -1,22 +1,4 @@
 import React from 'react';
-import { 
-  ShieldCheck, 
-  UserCheck, 
-  Wifi, 
-  WifiOff, 
-  Boxes, 
-  FileCode2, 
-  HelpCircle, 
-  Globe2, 
-  RefreshCw, 
-  AlertTriangle,
-  Stethoscope,
-  Building2,
-  HeartHandshake,
-  QrCode,
-  Activity,
-  Crown
-} from 'lucide-react';
 import { UserPersona, UserRole, NetworkSpeed, JurisdictionMode } from '../types';
 import { USER_PERSONAS } from '../data/personas';
 
@@ -58,7 +40,6 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
       {!isChainValid && (
         <div className="bg-rose-600 text-white px-4 py-1.5 text-xs font-semibold flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 animate-bounce" />
             <span>WARNING: Blockchain ledger integrity compromised! A block was tampered with.</span>
           </div>
           <button 
@@ -79,8 +60,8 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
               onClick={() => onSelectViewMode('PUBLIC')}
               className="flex items-center gap-3 text-left focus:outline-none group"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition">
-                <ShieldCheck className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition text-white font-bold text-sm">
+                DC
               </div>
               <div>
                 <div className="flex items-center gap-2">
@@ -106,7 +87,6 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <Globe2 className="w-3.5 h-3.5" />
               <span>Public Homepage</span>
             </button>
 
@@ -118,7 +98,6 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <Activity className="w-3.5 h-3.5" />
               <span>{currentPersona.role.replace(/_/g, ' ')} Portal</span>
             </button>
           </div>
@@ -130,7 +109,6 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition"
               title="Inspect Blockchain & Smart Contract Execution"
             >
-              <Boxes className="w-3.5 h-3.5 text-cyan-400" />
               <span>Block Explorer</span>
             </button>
 
@@ -139,7 +117,6 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition"
               title="Hospital HIS / HL7 FHIR Interoperability Bridge"
             >
-              <FileCode2 className="w-3.5 h-3.5 text-emerald-400" />
               <span>FHIR / HIS Interop</span>
             </button>
 
@@ -148,7 +125,6 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-medium border border-amber-500/30 transition animate-pulse"
               title="Edge Cases Grill & Decision Matrix"
             >
-              <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
               <span>Edge Cases Grill</span>
             </button>
           </div>
@@ -158,7 +134,6 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
             
             {/* Jurisdiction Selector */}
             <div className="hidden lg:flex items-center gap-1.5 bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700 text-xs text-slate-300">
-              <Globe2 className="w-3.5 h-3.5 text-indigo-400" />
               <select
                 value={jurisdiction}
                 onChange={(e) => onSelectJurisdiction(e.target.value as JurisdictionMode)}
@@ -175,9 +150,9 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
             {/* Network Speed Selector */}
             <div className="flex items-center gap-1 bg-slate-800 p-1 rounded-lg border border-slate-700">
               {networkSpeed === 'OFFLINE' ? (
-                <WifiOff className="w-3.5 h-3.5 text-rose-400 ml-1.5" />
+                <span className="text-rose-400 ml-1.5 text-[10px] font-bold">OFF</span>
               ) : (
-                <Wifi className="w-3.5 h-3.5 text-emerald-400 ml-1.5" />
+                <span className="text-emerald-400 ml-1.5 text-[10px] font-bold">ON</span>
               )}
               <select
                 value={networkSpeed}
@@ -192,7 +167,6 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
 
               {pendingQueueCount > 0 && (
                 <span className="bg-amber-500 text-slate-950 font-bold text-[10px] px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                  <RefreshCw className="w-2.5 h-2.5 animate-spin" />
                   {pendingQueueCount}
                 </span>
               )}
@@ -201,19 +175,18 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
             {/* Role Switcher Pill */}
             <div className="relative group">
               <button className="flex items-center gap-2 bg-gradient-to-r from-indigo-900/80 to-slate-800 hover:from-indigo-800 px-3 py-1.5 rounded-xl border border-indigo-500/30 text-xs transition text-left">
-                <div className="w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300">
-                  {currentPersona.role === 'ADMIN' && <Crown className="w-3.5 h-3.5 text-amber-400" />}
-                  {currentPersona.role === 'MEDICAL_OFFICER' && <Stethoscope className="w-3.5 h-3.5" />}
-                  {currentPersona.role === 'REGISTRAR' && <Building2 className="w-3.5 h-3.5" />}
-                  {currentPersona.role === 'FAMILY' && <HeartHandshake className="w-3.5 h-3.5" />}
-                  {currentPersona.role === 'VERIFIER_AGENCY' && <QrCode className="w-3.5 h-3.5" />}
-                  {currentPersona.role === 'SYSTEM_AUDITOR' && <Activity className="w-3.5 h-3.5" />}
+                <div className="w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 text-[10px] font-bold">
+                  {currentPersona.role === 'ADMIN' && <span className="text-amber-400">AD</span>}
+                  {currentPersona.role === 'MEDICAL_OFFICER' && <span>MO</span>}
+                  {currentPersona.role === 'REGISTRAR' && <span>RG</span>}
+                  {currentPersona.role === 'FAMILY' && <span>FM</span>}
+                  {currentPersona.role === 'VERIFIER_AGENCY' && <span>VA</span>}
+                  {currentPersona.role === 'SYSTEM_AUDITOR' && <span>SA</span>}
                 </div>
                 <div className="hidden sm:block">
                   <p className="font-semibold text-slate-100 text-[11px] leading-tight">{currentPersona.name}</p>
                   <p className="text-[10px] text-cyan-400 font-mono tracking-tighter">{currentPersona.role.replace('_', ' ')}</p>
                 </div>
-                <UserCheck className="w-3.5 h-3.5 text-slate-400 ml-1" />
               </button>
 
               {/* Persona Selector Dropdown Menu */}
@@ -236,13 +209,13 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
                           : 'hover:bg-slate-800 text-slate-300'
                       }`}
                     >
-                      <div className="mt-0.5 text-indigo-400">
-                        {persona.role === 'ADMIN' && <Crown className="w-4 h-4 text-amber-400" />}
-                        {persona.role === 'MEDICAL_OFFICER' && <Stethoscope className="w-4 h-4" />}
-                        {persona.role === 'REGISTRAR' && <Building2 className="w-4 h-4" />}
-                        {persona.role === 'FAMILY' && <HeartHandshake className="w-4 h-4" />}
-                        {persona.role === 'VERIFIER_AGENCY' && <QrCode className="w-4 h-4" />}
-                        {persona.role === 'SYSTEM_AUDITOR' && <Activity className="w-4 h-4" />}
+                      <div className="mt-0.5 text-indigo-400 text-[10px] font-bold">
+                        {persona.role === 'ADMIN' && <span className="text-amber-400">AD</span>}
+                        {persona.role === 'MEDICAL_OFFICER' && <span>MO</span>}
+                        {persona.role === 'REGISTRAR' && <span>RG</span>}
+                        {persona.role === 'FAMILY' && <span>FM</span>}
+                        {persona.role === 'VERIFIER_AGENCY' && <span>VA</span>}
+                        {persona.role === 'SYSTEM_AUDITOR' && <span>SA</span>}
                       </div>
                       <div>
                         <p className="font-medium text-xs text-slate-200">{persona.name}</p>

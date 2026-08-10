@@ -1,20 +1,4 @@
 import React, { useState } from 'react';
-import { 
-  HeartHandshake, 
-  Search, 
-  Download, 
-  Share2, 
-  KeyRound, 
-  ShieldCheck, 
-  FileCheck2, 
-  Copy, 
-  Check, 
-  Lock,
-  Unlock,
-  Building,
-  UserCheck,
-  Loader2
-} from 'lucide-react';
 import { DeathCertificate, UserPersona } from '../../types';
 
 interface FamilyPortalProps {
@@ -94,8 +78,8 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
       {/* Top Banner */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
-            <HeartHandshake className="w-7 h-7" />
+          <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0 font-bold text-sm">
+            FAM
           </div>
           <div>
             <h1 className="text-xl font-bold text-white">Family & Designated Kin Digital Service Portal</h1>
@@ -109,7 +93,6 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
           onClick={() => setShowKeyShardModal(true)}
           className="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 px-4 py-2 rounded-none text-xs font-semibold transition flex items-center gap-2"
         >
-          <KeyRound className="w-4 h-4 text-indigo-400" />
           <span>Key Recovery Escrow (Shamir Shards)</span>
         </button>
       </div>
@@ -119,14 +102,13 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
         <h2 className="text-base font-bold text-white">Search Official Deceased Family Record</h2>
         <form onSubmit={handleSearch} className="flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
             <input
               type="text"
               required
               placeholder="Enter Certificate ID (e.g. CERT-2026-GENESIS-001) or Deceased Name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
             />
           </div>
           <button
@@ -135,10 +117,7 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
             className="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-400 disabled:opacity-80 text-slate-950 font-bold px-6 py-2.5 rounded-none text-xs transition shadow-lg shadow-cyan-500/20 shrink-0 flex items-center justify-center gap-2"
           >
             {isSearching ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                <span>Locating Record...</span>
-              </>
+              <span>Locating Record…</span>
             ) : (
               <span>Locate Record</span>
             )}
@@ -164,7 +143,6 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
       {/* Certificate Details Result */}
       {isSearching ? (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl text-center space-y-3">
-          <Loader2 className="w-6 h-6 text-cyan-400 animate-spin mx-auto" />
           <p className="text-xs font-mono text-cyan-300 font-bold uppercase tracking-wider">
             Matching Cryptographic Fingerprints On Ledger...
           </p>
@@ -198,7 +176,6 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
               onClick={() => onOpenPdfModal(foundCert)}
               className="bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-bold px-5 py-2.5 rounded-none text-xs transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2"
             >
-              <Download className="w-4 h-4" />
               <span>Download Official Sealed Certificate (PDF)</span>
             </button>
           </div>
@@ -243,7 +220,6 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
           {/* Probate & Insurance Access Delegation Tool */}
           <div className="bg-slate-950/80 p-5 rounded-2xl border border-indigo-500/30 space-y-3">
             <div className="flex items-center gap-2">
-              <Share2 className="w-4 h-4 text-indigo-400" />
               <h3 className="text-xs font-bold text-white uppercase tracking-wider">
                 Grant Temporary Verification Access to Insurance / Bank / Probate Attorney
               </h3>
@@ -266,14 +242,12 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
                 type="submit"
                 className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-none text-xs transition flex items-center justify-center gap-1.5 shrink-0"
               >
-                <Unlock className="w-3.5 h-3.5" />
                 <span>Issue Temporal ZK Access Key</span>
               </button>
             </form>
 
             {isDelegatedSuccess && (
               <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 p-3 rounded-xl text-xs flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-400" />
                 <span>Temporary ZK Access Key successfully issued to {delegatedAgency}! Valid for 30 days.</span>
               </div>
             )}
@@ -292,7 +266,6 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
           <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <KeyRound className="w-5 h-5 text-indigo-400" />
                 <span>Shamir\'s Secret Key Recovery (2-of-3 Shards)</span>
               </h3>
               <button onClick={() => setShowKeyShardModal(false)} className="text-slate-400 hover:text-white text-xs">✕</button>
@@ -335,7 +308,7 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
               {recoveredKey && (
                 <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 p-3 rounded-xl text-xs space-y-1">
                   <p className="font-bold flex items-center gap-1">
-                    <Check className="w-4 h-4 text-emerald-400" /> Key Re-synthesized Successfully!
+                    Key Re-synthesized Successfully!
                   </p>
                   <p className="font-mono text-[11px] text-cyan-300">{recoveredKey}</p>
                 </div>

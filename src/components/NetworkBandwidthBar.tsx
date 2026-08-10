@@ -1,5 +1,4 @@
 import React from 'react';
-import { Wifi, WifiOff, RefreshCw, Zap, CheckCircle2, CloudUpload } from 'lucide-react';
 import { NetworkSpeed, OfflineQueueItem } from '../types';
 
 interface NetworkBandwidthBarProps {
@@ -33,22 +32,18 @@ export const NetworkBandwidthBar: React.FC<NetworkBandwidthBarProps> = ({
           <div className="flex items-center gap-1.5 font-semibold">
             {networkSpeed === 'OFFLINE' ? (
               <span className="flex items-center gap-1 text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/20">
-                <WifiOff className="w-3.5 h-3.5" />
                 Offline Mode (Local Storage Encrypted)
               </span>
             ) : networkSpeed === 'EDGE_2G' ? (
               <span className="flex items-center gap-1 text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
-                <Zap className="w-3.5 h-3.5" />
                 2G Field Network (Low Bandwidth)
               </span>
             ) : networkSpeed === 'LOW_BANDWIDTH_3G' ? (
               <span className="flex items-center gap-1 text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
-                <Wifi className="w-3.5 h-3.5" />
                 3G Rural Connection
               </span>
             ) : (
               <span className="flex items-center gap-1 text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
-                <Wifi className="w-3.5 h-3.5" />
                 5G High-Speed Node Connected
               </span>
             )}
@@ -80,24 +75,20 @@ export const NetworkBandwidthBar: React.FC<NetworkBandwidthBarProps> = ({
             >
               {isSyncing ? (
                 <>
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   <span>Syncing Queue to Blockchain...</span>
                 </>
               ) : networkSpeed === 'OFFLINE' ? (
                 <>
-                  <CloudUpload className="w-3.5 h-3.5" />
                   <span>Connect to Network to Broadcast</span>
                 </>
               ) : (
                 <>
-                  <CloudUpload className="w-3.5 h-3.5" />
                   <span>Broadcast {pendingItems.length} Off-Chain Items</span>
                 </>
               )}
             </button>
           ) : (
             <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" />
               All offline transactions synced & anchored on-chain
             </span>
           )}

@@ -1,8 +1,127 @@
 @import "tailwindcss";
 
+/*
+  BRAND THEME — warm tan/bronze anchored on #BA8C63.
+
+  How this works (Tailwind v4): utility classes like `bg-cyan-500` or `text-indigo-400`
+  read their color from theme tokens named `--color-cyan-500`, `--color-indigo-400`, etc.
+  By REDEFINING those tokens here, every existing bluish class in the app renders in our
+  brand tan — with zero edits to the component JSX. The class names still say "cyan"/"indigo",
+  but they now paint #BA8C63 shades. We can rename them to `brand-*` later if desired.
+
+  `--brand-500` is the exact requested color (#BA8C63); the rest is a ramp around it.
+*/
 @theme {
   --color-charcoal-dark: #28292e;
   --color-charcoal-card: #28292e;
+
+  /* Canonical brand ramp (use `brand-*` classes in new code). */
+  --color-brand-50:  #f7f1ea;
+  --color-brand-100: #ece0d1;
+  --color-brand-200: #dcc6ac;
+  --color-brand-300: #cbac88;
+  --color-brand-400: #c19c76;
+  --color-brand-500: #ba8c63; /* the requested color */
+  --color-brand-600: #a2764f;
+  --color-brand-700: #855f40;
+  --color-brand-800: #684a33;
+  --color-brand-900: #4f3927;
+  --color-brand-950: #2e2116;
+
+  /* Remap the app's existing bluish palettes onto the brand ramp. */
+  --color-cyan-50:  #f7f1ea;
+  --color-cyan-100: #ece0d1;
+  --color-cyan-200: #dcc6ac;
+  --color-cyan-300: #cbac88;
+  --color-cyan-400: #c19c76;
+  --color-cyan-500: #ba8c63;
+  --color-cyan-600: #a2764f;
+  --color-cyan-700: #855f40;
+  --color-cyan-800: #684a33;
+  --color-cyan-900: #4f3927;
+  --color-cyan-950: #2e2116;
+
+  --color-indigo-50:  #f7f1ea;
+  --color-indigo-100: #ece0d1;
+  --color-indigo-200: #dcc6ac;
+  --color-indigo-300: #cbac88;
+  --color-indigo-400: #c19c76;
+  --color-indigo-500: #ba8c63;
+  --color-indigo-600: #a2764f;
+  --color-indigo-700: #855f40;
+  --color-indigo-800: #684a33;
+  --color-indigo-900: #4f3927;
+  --color-indigo-950: #2e2116;
+
+  --color-sky-50:  #f7f1ea;
+  --color-sky-100: #ece0d1;
+  --color-sky-200: #dcc6ac;
+  --color-sky-300: #cbac88;
+  --color-sky-400: #c19c76;
+  --color-sky-500: #ba8c63;
+  --color-sky-600: #a2764f;
+  --color-sky-700: #855f40;
+  --color-sky-800: #684a33;
+  --color-sky-900: #4f3927;
+  --color-sky-950: #2e2116;
+
+  --color-blue-50:  #f7f1ea;
+  --color-blue-100: #ece0d1;
+  --color-blue-200: #dcc6ac;
+  --color-blue-300: #cbac88;
+  --color-blue-400: #c19c76;
+  --color-blue-500: #ba8c63;
+  --color-blue-600: #a2764f;
+  --color-blue-700: #855f40;
+  --color-blue-800: #684a33;
+  --color-blue-900: #4f3927;
+  --color-blue-950: #2e2116;
+
+  /* Fold remaining accent-ish palettes into the brand ramp too. */
+  --color-teal-300: #cbac88;   --color-teal-400: #c19c76;   --color-teal-500: #ba8c63;   --color-teal-600: #a2764f;
+  --color-violet-300: #cbac88; --color-violet-400: #c19c76; --color-violet-500: #ba8c63; --color-violet-600: #a2764f;
+  --color-purple-300: #cbac88; --color-purple-400: #c19c76; --color-purple-500: #ba8c63; --color-purple-600: #a2764f;
+  --color-fuchsia-400: #c19c76; --color-fuchsia-500: #ba8c63;
+  --color-pink-400: #c19c76;   --color-pink-500: #ba8c63;
+
+  /*
+    WARM-NEUTRAL RAMP.
+    Tailwind's `slate` (and gray/zinc/neutral/stone) are COOL blue-grays — that cool tint
+    is what still reads as "bluish" in places like the System Auditor. We override them with
+    a warm taupe/charcoal ramp so neutrals harmonize with the tan brand instead of fighting it.
+    (Semantic status colors — emerald/amber/rose — are left alone; they carry meaning.)
+  */
+  --color-slate-50:  #f6f3ef;
+  --color-slate-100: #ebe5dd;
+  --color-slate-200: #d8cec1;
+  --color-slate-300: #b8ab99;
+  --color-slate-400: #8f8371;
+  --color-slate-500: #6b6153;
+  --color-slate-600: #514940;
+  --color-slate-700: #3d372f;
+  --color-slate-800: #2e2a24;
+  --color-slate-900: #24211c;
+  --color-slate-950: #1a1814;
+
+  --color-gray-50:  #f6f3ef;  --color-gray-100: #ebe5dd;  --color-gray-200: #d8cec1;
+  --color-gray-300: #b8ab99;  --color-gray-400: #8f8371;  --color-gray-500: #6b6153;
+  --color-gray-600: #514940;  --color-gray-700: #3d372f;  --color-gray-800: #2e2a24;
+  --color-gray-900: #24211c;  --color-gray-950: #1a1814;
+
+  --color-zinc-50:  #f6f3ef;  --color-zinc-100: #ebe5dd;  --color-zinc-200: #d8cec1;
+  --color-zinc-300: #b8ab99;  --color-zinc-400: #8f8371;  --color-zinc-500: #6b6153;
+  --color-zinc-600: #514940;  --color-zinc-700: #3d372f;  --color-zinc-800: #2e2a24;
+  --color-zinc-900: #24211c;  --color-zinc-950: #1a1814;
+
+  --color-neutral-50:  #f6f3ef; --color-neutral-100: #ebe5dd; --color-neutral-200: #d8cec1;
+  --color-neutral-300: #b8ab99; --color-neutral-400: #8f8371; --color-neutral-500: #6b6153;
+  --color-neutral-600: #514940; --color-neutral-700: #3d372f; --color-neutral-800: #2e2a24;
+  --color-neutral-900: #24211c; --color-neutral-950: #1a1814;
+
+  --color-stone-50:  #f6f3ef; --color-stone-100: #ebe5dd; --color-stone-200: #d8cec1;
+  --color-stone-300: #b8ab99; --color-stone-400: #8f8371; --color-stone-500: #6b6153;
+  --color-stone-600: #514940; --color-stone-700: #3d372f; --color-stone-800: #2e2a24;
+  --color-stone-900: #24211c; --color-stone-950: #1a1814;
 }
 
 .bg-charcoal {
@@ -15,4 +134,10 @@
 
 .bg-transparent-0 {
   background-color: #00000000;
+}
+
+/* Make default focus rings (Tailwind's `ring` with no color) use the brand tan
+   instead of its built-in cyan fallback. */
+* {
+  --tw-ring-color: var(--color-brand-500);
 }

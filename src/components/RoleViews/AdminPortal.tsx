@@ -1,26 +1,4 @@
 import React, { useState } from 'react';
-import { 
-  UserCheck, 
-  UserX, 
-  ShieldCheck, 
-  Building2, 
-  Award, 
-  Plus, 
-  Search, 
-  Filter, 
-  Sliders, 
-  Activity, 
-  FileText, 
-  Baby, 
-  HeartHandshake, 
-  AlertTriangle, 
-  RefreshCw, 
-  CheckCircle2, 
-  Key, 
-  Lock, 
-  Globe, 
-  Layers
-} from 'lucide-react';
 import { FacultyMember, JurisdictionMode, UserPersona } from '../../types';
 
 interface AdminPortalProps {
@@ -131,7 +109,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
               onClick={() => setShowAddModal(true)}
               className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-4 py-2 text-xs flex items-center gap-2 shadow-lg transition border border-cyan-400/40"
             >
-              <Plus className="w-4 h-4" />
               <span>Register Practitioner</span>
             </button>
           </div>
@@ -142,7 +119,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           <div className="bg-slate-900/80 border border-slate-800 p-3.5 space-y-1">
             <div className="flex items-center justify-between text-xs text-slate-400">
               <span>Active Faculty</span>
-              <UserCheck className="w-3.5 h-3.5 text-cyan-400" />
             </div>
             <p className="text-xl font-mono font-extrabold text-white">
               {facultyMembers.filter(f => f.status === 'ACTIVE').length} <span className="text-xs font-normal text-slate-400">/ {facultyMembers.length}</span>
@@ -153,7 +129,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           <div className="bg-slate-900/80 border border-slate-800 p-3.5 space-y-1">
             <div className="flex items-center justify-between text-xs text-slate-400">
               <span>Cross-Ledger Link</span>
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             </div>
             <p className="text-xl font-mono font-extrabold text-emerald-400">ACTIVE</p>
             <p className="text-[10px] text-slate-400 font-mono">Birth-to-Death ZK Proof Hash</p>
@@ -162,7 +137,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           <div className="bg-slate-900/80 border border-slate-800 p-3.5 space-y-1">
             <div className="flex items-center justify-between text-xs text-slate-400">
               <span>Death Records</span>
-              <FileText className="w-3.5 h-3.5 text-indigo-400" />
             </div>
             <p className="text-xl font-mono font-extrabold text-indigo-400">{totalDeathsCount}</p>
             <p className="text-[10px] text-slate-400 font-mono">Forensic Mortality Registry</p>
@@ -171,7 +145,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           <div className="bg-slate-900/80 border border-slate-800 p-3.5 space-y-1">
             <div className="flex items-center justify-between text-xs text-slate-400">
               <span>Ledger Blocks</span>
-              <Layers className="w-3.5 h-3.5 text-cyan-400" />
             </div>
             <p className="text-xl font-mono font-extrabold text-cyan-400">#{totalBlocksCount}</p>
             <p className="text-[10px] text-cyan-400/80 font-mono">Block Height Active</p>
@@ -189,7 +162,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
               : 'border-transparent text-slate-400 hover:text-slate-200'
           }`}
         >
-          <UserCheck className="w-4 h-4" />
           <span>Practitioners & Faculty Registry</span>
         </button>
 
@@ -201,7 +173,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
               : 'border-transparent text-slate-400 hover:text-slate-200'
           }`}
         >
-          <Sliders className="w-4 h-4" />
           <span>Network Policy & Governance</span>
         </button>
 
@@ -213,7 +184,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
               : 'border-transparent text-slate-400 hover:text-slate-200'
           }`}
         >
-          <Activity className="w-4 h-4" />
           <span>Audit Controls & Emergency Reset</span>
         </button>
       </div>
@@ -224,19 +194,17 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           {/* Filter Bar */}
           <div className="bg-[#28292e] border border-slate-700/80 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="relative w-full md:w-96">
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by physician name, license, or hospital..."
-                className="w-full bg-slate-950 border border-slate-800 text-white pl-9 pr-3 py-1.5 text-xs focus:outline-none focus:border-cyan-500"
+                className="w-full bg-slate-950 border border-slate-800 text-white px-3 py-1.5 text-xs focus:outline-none focus:border-cyan-500"
               />
             </div>
 
             <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto">
               <div className="flex items-center gap-1.5 text-xs text-slate-400 shrink-0">
-                <Filter className="w-3.5 h-3.5" />
                 <span>Specialty:</span>
               </div>
               <select
@@ -295,15 +263,12 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
                   <div className="space-y-1.5 text-xs text-slate-300 pt-2 border-t border-slate-800">
                     <div className="flex items-center gap-1.5">
-                      <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       <span className="truncate">{member.organization}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <Award className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       <span>Role: <strong className="text-white">{member.role}</strong></span>
                     </div>
                     <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-400 truncate">
-                      <Key className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                       <span className="truncate" title={member.publicKey}>{member.publicKey}</span>
                     </div>
                   </div>
@@ -321,7 +286,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                         className="bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800/80 text-[11px] px-2.5 py-1 font-semibold transition flex items-center gap-1"
                         title="Suspend Signing Privileges"
                       >
-                        <UserX className="w-3 h-3" />
                         <span>Suspend</span>
                       </button>
                     ) : (
@@ -330,7 +294,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                         className="bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 border border-emerald-800/80 text-[11px] px-2.5 py-1 font-semibold transition flex items-center gap-1"
                         title="Authorize & Verify Practitioner"
                       >
-                        <UserCheck className="w-3 h-3" />
                         <span>Authorize</span>
                       </button>
                     )}
@@ -347,7 +310,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-[#28292e] border border-slate-700/80 p-6 space-y-5 shadow-xl">
             <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Globe className="w-5 h-5 text-cyan-400" />
               <div>
                 <h3 className="text-sm font-bold text-white">Data Privacy & Sovereignty Enforcement</h3>
                 <p className="text-xs text-slate-400">Set active zero-knowledge privacy policy for birth and death records</p>
@@ -395,7 +357,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           {/* Smart Contract Parameters */}
           <div className="bg-[#28292e] border border-slate-700/80 p-6 space-y-5 shadow-xl">
             <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-              <Lock className="w-5 h-5 text-emerald-400" />
               <div>
                 <h3 className="text-sm font-bold text-white">Smart Contract Execution Parameters</h3>
                 <p className="text-xs text-slate-400">Cryptographic consensus & threshold signatures</p>
@@ -424,7 +385,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
               <div className="bg-slate-950 border border-slate-800 p-4 space-y-3">
                 <h4 className="font-bold text-white flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-cyan-400" />
                   <span>FHIR Interoperability Bridge</span>
                 </h4>
                 <p className="text-slate-400 text-[11px]">
@@ -444,7 +404,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         <div className="space-y-6">
           <div className="bg-[#28292e] border border-slate-700/80 p-6 space-y-4 shadow-xl">
             <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-              <AlertTriangle className="w-5 h-5 text-amber-400" />
               <div>
                 <h3 className="text-sm font-bold text-white">System Diagnostics & Reset Controls</h3>
                 <p className="text-xs text-slate-400">Perform maintenance, clear cache, or reset blockchain ledger to initial genesis state</p>
@@ -453,7 +412,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
             <div className="p-4 bg-amber-950/20 border border-amber-500/30 space-y-3">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <h4 className="text-xs font-bold text-amber-300">Reset Ledger to Genesis State</h4>
                   <p className="text-[11px] text-amber-200/80">
@@ -466,7 +424,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                 onClick={onResetGenesis}
                 className="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2 text-xs flex items-center gap-2 transition border border-amber-300 shadow-md"
               >
-                <RefreshCw className="w-4 h-4" />
                 <span>Execute Ledger Genesis Reset</span>
               </button>
             </div>
@@ -479,7 +436,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-slate-900 border border-cyan-500/50 max-w-lg w-full p-6 space-y-5 relative shadow-2xl">
             <div className="flex items-center gap-2 border-b border-slate-800 pb-3">
-              <UserCheck className="w-5 h-5 text-cyan-400" />
               <div>
                 <h3 className="text-sm font-bold text-white">Enroll New Medical Practitioner / Registrar</h3>
                 <p className="text-xs text-slate-400">Issue cryptographic identity and license verification</p>
@@ -494,7 +450,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
             {addSuccess && (
               <div className="bg-emerald-950/50 border border-emerald-500/50 p-2.5 text-xs text-emerald-300 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>{addSuccess}</span>
               </div>
             )}

@@ -1,0 +1,33 @@
+{
+  "name": "dedecel-backend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Phase 2 off-chain backend: PII store (Supabase) + salted hashing + API.",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "test:hash": "tsx src/hashing.test.ts",
+    "test:store": "tsx src/store.test.ts",
+    "test:api": "tsx src/api.test.ts",
+    "test:all": "npm run test:hash && npm run test:store && npm run test:api",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "near-api-js": "^5.1.1",
+    "tsx": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "typescript": "~5.8.2"
+  }
+}

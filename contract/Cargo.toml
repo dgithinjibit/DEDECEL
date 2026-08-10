@@ -1,0 +1,33 @@
+# Cargo.toml — the "manifest" for a Rust project.
+# It declares the project's name, version, and which libraries ("crates") it uses.
+# Think of it like package.json in a Node/JS project.
+
+[package]
+name = "dedecel-anchor"
+version = "0.1.0"
+edition = "2021"
+
+# A NEAR contract is compiled into a .wasm library, not a normal executable.
+# "cdylib" = build a C-compatible dynamic library, which is what the wasm target needs.
+# "rlib"   = also build a normal Rust library so tests can import this code.
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# near-sdk is the official toolkit for writing NEAR smart contracts in Rust.
+# It gives us #[near] macros, on-chain storage collections (LookupMap), logging, etc.
+near-sdk = "5.5.0"
+
+[dev-dependencies]
+# Only needed while running `cargo test` on our machine (not shipped on-chain).
+# This provides a fake blockchain environment so we can unit-test the contract locally.
+near-sdk = { version = "5.5.0", features = ["unit-testing"] }
+
+# Release-build settings that keep the compiled .wasm small and cheap to deploy.
+[profile.release]
+codegen-units = 1
+opt-level = "z"       # optimize for small size ("z" = smallest)
+lto = true            # link-time optimization
+debug = false
+panic = "abort"
+overflow-checks = true

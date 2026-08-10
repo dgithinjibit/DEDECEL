@@ -51,7 +51,7 @@ When presented to a board of directors, government ministers, or venture investo
 * **The Challenge**: Blockchain immutability violates GDPR's "Right to be Forgotten" and HIPAA patient confidentiality.
 * **The DEDECEL Solution**:
   * **Zero-Knowledge Proof Engine**: DEDECEL **NEVER** writes unencrypted names, national IDs, or ICD-10 medical diagnostics to the blockchain.
-  * **Cairo ZK Smart Contracts (`/backend/cairo-zk`)**: The Cairo smart contract verifies a ZK-STARK proof that proves:
+  * **Cairo ZK Smart Contracts (`/experimental/cairo-zk`)**: The Cairo smart contract verifies a ZK-STARK proof that proves:
     $$\text{Proof} \implies \text{Valid Physician Signature} \land \text{Authentic Hospital Hash} \land \text{Deceased Status}$$
   * Verifiers (insurance agencies, banks) verify the cryptographic proof without accessing raw PII or clinical cause-of-death notes.
 
@@ -79,14 +79,14 @@ DEDECEL is architected across three synchronized layers:
                                     │
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                    RUST CONSENSUS NODE (`/backend/rust-node`)           │
+│                    RUST CONSENSUS NODE (`/experimental/rust-node`)           │
 │  Actix-Web REST API • Proof-of-Authority (PoA) • Tokio Asynchronous   │
 │  Multi-Sig Oracle Validation • SHA-256 Merkle Tree Block Generator     │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                CAIRO ZK-PROOF ENGINE (`/backend/cairo-zk`)              │
+│                CAIRO ZK-PROOF ENGINE (`/experimental/cairo-zk`)              │
 │  Starknet Cairo 2.4 Smart Contract • Zero-Knowledge Death Verification  │
 │  GDPR / HIPAA Non-PII On-Chain State Sealing                           │
 └────────────────────────────────────────────────────────────────────────┘
@@ -97,12 +97,12 @@ DEDECEL is architected across three synchronized layers:
 * **Offline-First Sync Engine**: Enqueues signed records in IndexedDB during network blackouts and broadcasts upon reconnection.
 * **Public Verification**: QR-code scanning and instant hash validation.
 
-### 2. Rust Consortium Backend (`/backend/rust-node`)
-* **Path**: `/backend/rust-node/src/main.rs`
+### 2. Rust Consortium Backend (`/experimental/rust-node`)
+* **Path**: `/experimental/rust-node/src/main.rs`
 * **Features**: Asynchronous Tokio engine, Actix-Web API, PoA block proposal, multi-sig oracle gathering, and SHA-256 Merkle root computation.
 
-### 3. Cairo Zero-Knowledge Engine (`/backend/cairo-zk`)
-* **Path**: `/backend/cairo-zk/src/death_cert_verifier.cairo`
+### 3. Cairo Zero-Knowledge Engine (`/experimental/cairo-zk`)
+* **Path**: `/experimental/cairo-zk/src/death_cert_verifier.cairo`
 * **Features**: Starknet Cairo smart contract verifying ZK-STARK proofs, managing sealed record states without disclosing PII.
 
 ---

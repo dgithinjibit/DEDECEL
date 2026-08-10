@@ -17,6 +17,12 @@ export default defineConfig(() => {
       hmr: process.env.DISABLE_HMR !== 'true',
       // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
+      // Forward backend API calls to the Phase 2 backend (backend/, port 4000).
+      // The app keeps calling /api/v1/* and /v2/*; Vite proxies them to the real server.
+      proxy: {
+        '/api/v1': { target: 'http://localhost:4000', changeOrigin: true },
+        '/v2': { target: 'http://localhost:4000', changeOrigin: true },
+      },
     },
   };
 });

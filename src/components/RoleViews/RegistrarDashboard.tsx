@@ -1,18 +1,4 @@
 import React, { useState } from 'react';
-import { 
-  Building2, 
-  ShieldCheck, 
-  CheckCircle2, 
-  XCircle, 
-  FileLock2, 
-  BadgeCheck, 
-  Clock, 
-  Check, 
-  Search,
-  ExternalLink,
-  Lock,
-  Cpu
-} from 'lucide-react';
 import { DeathCertificate, UserPersona } from '../../types';
 import { CryptoEngine } from '../../services/cryptoEngine';
 
@@ -70,8 +56,8 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
       {/* Top Banner */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
-            <Building2 className="w-7 h-7" />
+          <div className="w-12 h-12 rounded-2xl bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 font-bold text-sm">
+            REG
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -112,13 +98,12 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
           </div>
 
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
             <input
               type="text"
               placeholder="Search by Name, ID, Cert #..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-slate-800 border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 w-64"
+              className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 w-64"
             />
           </div>
         </div>
@@ -184,11 +169,9 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
                   {/* Verification Badges */}
                   <div className="space-y-1.5 text-[11px] font-mono">
                     <div className="flex items-center gap-1.5 text-emerald-400">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>MD Signature: Verified ({cert.physicianSignatureHash?.substring(0, 16)}...)</span>
                     </div>
                     <div className="flex items-center gap-1.5 text-emerald-400">
-                      <ShieldCheck className="w-3.5 h-3.5" />
                       <span>ZK Proof: {cert.zeroKnowledgeProof.substring(0, 20)}...</span>
                     </div>
                   </div>
@@ -201,7 +184,6 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
                           onClick={() => handleApprove(cert)}
                           className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold py-2 rounded-none text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/10"
                         >
-                          <BadgeCheck className="w-4 h-4" />
                           <span>Apply On-Chain State Seal</span>
                         </button>
                         <button
@@ -216,21 +198,20 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
                     {isSealed && (
                       <div className="w-full flex items-center justify-between text-xs text-emerald-400">
                         <span className="flex items-center gap-1 font-semibold">
-                          <Check className="w-4 h-4" /> Official State Seal Active
+                          Official State Seal Active
                         </span>
                         <button
                           onClick={onOpenExplorer}
                           className="text-cyan-400 hover:underline text-[11px] flex items-center gap-1"
                         >
-                          <span>Block #{cert.blockNumber}</span>
-                          <ExternalLink className="w-3 h-3" />
+                          <span>Block #{cert.blockNumber} ›</span>
                         </button>
                       </div>
                     )}
 
                     {isRevoked && (
                       <span className="text-xs text-rose-400 font-semibold flex items-center gap-1">
-                        <XCircle className="w-4 h-4" /> Revoked by Judicial/Registrar Order
+                        Revoked by Judicial/Registrar Order
                       </span>
                     )}
                   </div>
@@ -247,7 +228,6 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
         <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <XCircle className="w-5 h-5 text-rose-400" />
               <span>Revoke Certificate #{selectedCert.id}</span>
             </h3>
 

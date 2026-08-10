@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { FileCode2, X, Download, UploadCloud, Copy, Check, Server, RefreshCw } from 'lucide-react';
 import { DeathCertificate } from '../types';
 import { FhirInteroperability } from '../services/fhirInteroperability';
 
@@ -47,8 +46,8 @@ export const FhirInteropModal: React.FC<FhirInteropModalProps> = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-              <FileCode2 className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-xs">
+              FH
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">Hospital Information Systems (HIS) FHIR Interoperability</h2>
@@ -60,7 +59,7 @@ export const FhirInteropModal: React.FC<FhirInteropModalProps> = ({
             onClick={onClose}
             className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-none transition"
           >
-            <X className="w-5 h-5" />
+            Close
           </button>
         </div>
 
@@ -85,7 +84,6 @@ export const FhirInteropModal: React.FC<FhirInteropModalProps> = ({
                 onClick={handleCopyJson}
                 className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-none text-xs font-semibold transition flex items-center gap-1.5"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copied ? 'Copied JSON' : 'Copy JSON'}</span>
               </button>
 
@@ -93,7 +91,6 @@ export const FhirInteropModal: React.FC<FhirInteropModalProps> = ({
                 onClick={handleDownloadFhirFile}
                 className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-1.5 rounded-none text-xs transition shadow-lg shadow-emerald-500/20 flex items-center gap-1.5"
               >
-                <Download className="w-3.5 h-3.5" />
                 <span>Export .fhir.json</span>
               </button>
             </div>
@@ -102,7 +99,7 @@ export const FhirInteropModal: React.FC<FhirInteropModalProps> = ({
           {/* Test HIS Sync Connectors */}
           <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
             <span className="text-slate-400 font-semibold flex items-center gap-1.5">
-              <Server className="w-3.5 h-3.5 text-indigo-400" /> Test EHR Endpoint Bridge:
+              Test EHR Endpoint Bridge:
             </span>
             <div className="flex items-center gap-2">
               <button

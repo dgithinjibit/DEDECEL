@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Boxes, X, Hash, Cpu, Lock, CheckCircle2, ChevronRight, Copy, Check } from 'lucide-react';
 import { Block } from '../types';
 
 interface BlockExplorerModalProps {
@@ -29,8 +28,8 @@ export const BlockExplorerModal: React.FC<BlockExplorerModalProps> = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-              <Boxes className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold text-xs">
+              BX
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">Smart Contract Block Explorer & Merkle Tree Inspector</h2>
@@ -42,7 +41,7 @@ export const BlockExplorerModal: React.FC<BlockExplorerModalProps> = ({
             onClick={onClose}
             className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-none transition"
           >
-            <X className="w-5 h-5" />
+            Close
           </button>
         </div>
 
@@ -64,7 +63,7 @@ export const BlockExplorerModal: React.FC<BlockExplorerModalProps> = ({
               >
                 <div className="flex items-center justify-between">
                   <span className="font-mono font-bold text-xs">Block #{b.index}</span>
-                  <ChevronRight className="w-4 h-4 text-slate-500" />
+                  <span className="text-slate-500">›</span>
                 </div>
                 <p className="text-[10px] text-slate-400 mt-1 font-mono truncate">{b.hash.substring(0, 24)}...</p>
                 <p className="text-[9px] text-slate-500 mt-0.5">{new Date(b.timestamp).toLocaleTimeString()}</p>
@@ -88,8 +87,8 @@ export const BlockExplorerModal: React.FC<BlockExplorerModalProps> = ({
                     <span className="text-slate-500 block text-[10px]">Block Cryptographic Hash:</span>
                     <div className="flex items-center justify-between bg-slate-900 p-2 rounded-lg text-cyan-300">
                       <span className="truncate">{selectedBlock.hash}</span>
-                      <button onClick={() => copyToClipboard(selectedBlock.hash)} className="text-slate-400 hover:text-white shrink-0 ml-2">
-                        {copiedText === selectedBlock.hash ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      <button onClick={() => copyToClipboard(selectedBlock.hash)} className="text-slate-400 hover:text-white shrink-0 ml-2 text-[10px] font-bold">
+                        {copiedText === selectedBlock.hash ? <span className="text-emerald-400">Copied</span> : <span>Copy</span>}
                       </button>
                     </div>
                   </div>
@@ -98,8 +97,8 @@ export const BlockExplorerModal: React.FC<BlockExplorerModalProps> = ({
                     <span className="text-slate-500 block text-[10px]">Merkle Tree Root Hash:</span>
                     <div className="flex items-center justify-between bg-slate-900 p-2 rounded-lg text-emerald-400">
                       <span className="truncate">{selectedBlock.merkleRoot}</span>
-                      <button onClick={() => copyToClipboard(selectedBlock.merkleRoot)} className="text-slate-400 hover:text-white shrink-0 ml-2">
-                        {copiedText === selectedBlock.merkleRoot ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      <button onClick={() => copyToClipboard(selectedBlock.merkleRoot)} className="text-slate-400 hover:text-white shrink-0 ml-2 text-[10px] font-bold">
+                        {copiedText === selectedBlock.merkleRoot ? <span className="text-emerald-400">Copied</span> : <span>Copy</span>}
                       </button>
                     </div>
                   </div>

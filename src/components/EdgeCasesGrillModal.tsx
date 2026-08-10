@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { HelpCircle, X, CheckCircle2, Zap, Shield, KeyRound, AlertTriangle, ChevronRight, Check } from 'lucide-react';
 import { EDGE_CASE_SCENARIOS } from '../data/edgeCases';
 import { EdgeCaseScenario, NetworkSpeed } from '../types';
 
@@ -47,8 +46,8 @@ export const EdgeCasesGrillModal: React.FC<EdgeCasesGrillModalProps> = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-4 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-              <HelpCircle className="w-6 h-6" />
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold text-xs">
+              EC
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">Edge Case Grill & Architectural Decision Matrix</h2>
@@ -60,7 +59,7 @@ export const EdgeCasesGrillModal: React.FC<EdgeCasesGrillModalProps> = ({
             onClick={onClose}
             className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-none transition"
           >
-            <X className="w-5 h-5" />
+            Close
           </button>
         </div>
 
@@ -82,7 +81,7 @@ export const EdgeCasesGrillModal: React.FC<EdgeCasesGrillModalProps> = ({
               >
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-xs">{s.title}</span>
-                  <ChevronRight className="w-4 h-4 text-slate-500 shrink-0" />
+                  <span className="text-slate-500 shrink-0">›</span>
                 </div>
                 <span className="inline-block mt-1 bg-slate-900 text-cyan-400 text-[9px] font-mono px-1.5 py-0.5 rounded border border-slate-800">
                   {s.category}
@@ -98,7 +97,7 @@ export const EdgeCasesGrillModal: React.FC<EdgeCasesGrillModalProps> = ({
                 <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                   <h3 className="font-bold text-white text-base">{activeScenario.title}</h3>
                   <span className="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> Architecturally Handled
+                    Architecturally Handled
                   </span>
                 </div>
 
@@ -117,7 +116,6 @@ export const EdgeCasesGrillModal: React.FC<EdgeCasesGrillModalProps> = ({
 
               {actionFeedback && (
                 <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 p-3 rounded-2xl text-xs flex items-center gap-2">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0" />
                   <span>{actionFeedback}</span>
                 </div>
               )}
@@ -130,7 +128,6 @@ export const EdgeCasesGrillModal: React.FC<EdgeCasesGrillModalProps> = ({
                   onClick={() => handleRunInteractiveTest(activeScenario)}
                   className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-5 py-2.5 rounded-none text-xs transition shadow-lg shadow-amber-500/20 flex items-center gap-2"
                 >
-                  <Zap className="w-4 h-4" />
                   <span>{activeScenario.interactiveActionLabel}</span>
                 </button>
               </div>
