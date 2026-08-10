@@ -58,7 +58,7 @@ export const ZkVerifierModal: React.FC<ZkVerifierModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
               <span className="text-slate-500 block">JURISDICTION CODE</span>
               <span className="text-white font-bold">{record.zkProof.publicInputs.jurisdictionCode}</span>

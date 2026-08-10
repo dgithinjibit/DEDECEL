@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserPersona, UserRole, NetworkSpeed, JurisdictionMode } from '../types';
 import { USER_PERSONAS } from '../data/personas';
+
+/** Two-letter tag for a role — letters only, no icons (project rule). */
+const roleTag = (role: UserRole): string =>
+  ({
+    ADMIN: 'AD',
+    MEDICAL_OFFICER: 'MO',
+    REGISTRAR: 'RG',
+    FAMILY: 'FM',
+    VERIFIER_AGENCY: 'VA',
+    SYSTEM_AUDITOR: 'SA',
+  } as Record<string, string>)[role] ?? '--';
 
 interface HeaderNavbarProps {
   currentPersona: UserPersona;
@@ -34,6 +45,11 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
   activeViewMode,
   onSelectViewMode
 }) => {
+  // Tap-driven menus (hover doesn't exist on touchscreens, so the old group-hover
+  // persona dropdown was unreachable on phones — these make both menus tappable).
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [personaMenuOpen, setPersonaMenuOpen] = useState(false);
+
   return (
     <header className="bg-[#28292e] border-b border-slate-700/80 text-[#ffffff] sticky top-0 z-40 shadow-xl">
       {/* Top Banner for Network / Chain Warning */}
@@ -172,16 +188,17 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
               )}
             </div>
 
-            {/* Role Switcher Pill */}
-            <div className="relative group">
-              <button className="flex items-center gap-2 bg-gradient-to-r from-indigo-900/80 to-slate-800 hover:from-indigo-800 px-3 py-1.5 rounded-xl border border-indigo-500/30 text-xs transition text-left">
+            {/* Role Switcher Pill — tap to open (works on touch + desktop) */}
+            <div className="relative">
+              <button
+                onClick={() => setPersonaMenuOpen((o) => !o)}
+                aria-expanded={personaMenuOpen}
+                className="flex items-center gap-2 bg-gradient-to-r from-indigo-900/80 to-slate-800 hover:from-indigo-800 px-3 py-1.5 rounded-xl border border-indigo-500/30 text-xs transition text-left"
+              >
                 <div className="w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-400/40 flex items-center justify-center text-indigo-300 text-[10px] font-bold">
-                  {currentPersona.role === 'ADMIN' && <span className="text-amber-400">AD</span>}
-                  {currentPersona.role === 'MEDICAL_OFFICER' && <span>MO</span>}
-                  {currentPersona.role === 'REGISTRAR' && <span>RG</span>}
-                  {currentPersona.role === 'FAMILY' && <span>FM</span>}
-                  {currentPersona.role === 'VERIFIER_AGENCY' && <span>VA</span>}
-                  {currentPersona.role === 'SYSTEM_AUDITOR' && <span>SA</span>}
+                  <span className={currentPersona.role === 'ADMIN' ? 'text-amber-400' : ''}>
+                    {roleTag(currentPersona.role)}
+                  </span>
                 </div>
                 <div className="hidden sm:block">
                   <p className="font-semibold text-slate-100 text-[11px] leading-tight">{currentPersona.name}</p>
@@ -190,46 +207,102 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
               </button>
 
               {/* Persona Selector Dropdown Menu */}
-              <div className="absolute right-0 mt-2 w-72 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2 hidden group-hover:block z-50">
-                <div className="px-3 py-2 border-b border-slate-800">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Switch Role & Persona</p>
-                  <p className="text-[10px] text-slate-500">Test dApp smart contract permissions</p>
+              {personaMenuOpen && (
+                <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2 z-50">
+                  <div className="px-3 py-2 border-b border-slate-800">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Switch Role & Persona</p>
+                    <p className="text-[10px] text-slate-500">Test dApp smart contract permissions</p>
+                  </div>
+                  <div className="space-y-1 mt-1">
+                    {Object.values(USER_PERSONAS).map((persona) => (
+                      <button
+                        key={persona.role}
+                        onClick={() => {
+                          onSelectPersona(persona);
+                          onSelectViewMode('PORTAL');
+                          setPersonaMenuOpen(false);
+                        }}
+                        className={`w-full text-left p-2 rounded-xl transition flex items-start gap-2.5 ${
+                          currentPersona.role === persona.role
+                            ? 'bg-indigo-600/20 border border-indigo-500/40 text-white'
+                            : 'hover:bg-slate-800 text-slate-300'
+                        }`}
+                      >
+                        <div className="mt-0.5 text-indigo-400 text-[10px] font-bold">
+                          <span className={persona.role === 'ADMIN' ? 'text-amber-400' : ''}>{roleTag(persona.role)}</span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-xs text-slate-200">{persona.name}</p>
+                          <p className="text-[10px] text-slate-400">{persona.title}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="space-y-1 mt-1">
-                  {Object.values(USER_PERSONAS).map((persona) => (
-                    <button
-                      key={persona.role}
-                      onClick={() => {
-                        onSelectPersona(persona);
-                        onSelectViewMode('PORTAL');
-                      }}
-                      className={`w-full text-left p-2 rounded-xl transition flex items-start gap-2.5 ${
-                        currentPersona.role === persona.role
-                          ? 'bg-indigo-600/20 border border-indigo-500/40 text-white'
-                          : 'hover:bg-slate-800 text-slate-300'
-                      }`}
-                    >
-                      <div className="mt-0.5 text-indigo-400 text-[10px] font-bold">
-                        {persona.role === 'ADMIN' && <span className="text-amber-400">AD</span>}
-                        {persona.role === 'MEDICAL_OFFICER' && <span>MO</span>}
-                        {persona.role === 'REGISTRAR' && <span>RG</span>}
-                        {persona.role === 'FAMILY' && <span>FM</span>}
-                        {persona.role === 'VERIFIER_AGENCY' && <span>VA</span>}
-                        {persona.role === 'SYSTEM_AUDITOR' && <span>SA</span>}
-                      </div>
-                      <div>
-                        <p className="font-medium text-xs text-slate-200">{persona.name}</p>
-                        <p className="text-[10px] text-slate-400">{persona.title}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              )}
             </div>
+
+            {/* Mobile menu toggle — text only, shown when the desktop rows are hidden */}
+            <button
+              onClick={() => setMobileMenuOpen((o) => !o)}
+              aria-expanded={mobileMenuOpen}
+              className="md:hidden text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 hover:bg-slate-700 transition"
+            >
+              {mobileMenuOpen ? 'Close' : 'Menu'}
+            </button>
 
           </div>
 
         </div>
+
+        {/* Mobile menu panel — everything the desktop hides (mode nav, tools, jurisdiction) */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-slate-800 py-3 space-y-3">
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => { onSelectViewMode('PUBLIC'); setMobileMenuOpen(false); }}
+                className={`px-3 py-2 text-xs font-semibold rounded-lg border transition ${
+                  activeViewMode === 'PUBLIC'
+                    ? 'bg-cyan-500 text-slate-950 border-cyan-500'
+                    : 'text-slate-300 border-slate-700 hover:text-white'
+                }`}
+              >
+                Public Homepage
+              </button>
+              <button
+                onClick={() => { onSelectViewMode('PORTAL'); setMobileMenuOpen(false); }}
+                className={`px-3 py-2 text-xs font-semibold rounded-lg border transition ${
+                  activeViewMode === 'PORTAL'
+                    ? 'bg-indigo-600 text-white border-indigo-600'
+                    : 'text-slate-300 border-slate-700 hover:text-white'
+                }`}
+              >
+                {currentPersona.role.replace(/_/g, ' ')} Portal
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              <button onClick={() => { onOpenExplorer(); setMobileMenuOpen(false); }} className="px-3 py-2 text-xs font-medium rounded-lg bg-slate-800 border border-slate-700 text-slate-200 text-left">Block Explorer</button>
+              <button onClick={() => { onOpenFhir(); setMobileMenuOpen(false); }} className="px-3 py-2 text-xs font-medium rounded-lg bg-slate-800 border border-slate-700 text-slate-200 text-left">FHIR / HIS Interop</button>
+              <button onClick={() => { onOpenEdgeCases(); setMobileMenuOpen(false); }} className="px-3 py-2 text-xs font-medium rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-left">Edge Cases Grill</button>
+            </div>
+
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider text-slate-500 mb-1">Data Jurisdiction</label>
+              <select
+                value={jurisdiction}
+                onChange={(e) => onSelectJurisdiction(e.target.value as JurisdictionMode)}
+                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none"
+              >
+                <option value="EU_GDPR" className="bg-slate-900">EU GDPR Sovereignty</option>
+                <option value="US_HIPAA" className="bg-slate-900">US HIPAA Privacy</option>
+                <option value="KE_PDPA" className="bg-slate-900">Kenya Data Protection</option>
+                <option value="SG_PDPA" className="bg-slate-900">Singapore PDPA</option>
+                <option value="GLOBAL_ISO" className="bg-slate-900">Global ISO/WHO Interop</option>
+              </select>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -292,7 +292,7 @@ export const FacultyLandingDashboard: React.FC<FacultyLandingDashboardProps> = (
                 <p className="text-[11px] text-slate-400">{node.location} • {node.type}</p>
               </div>
 
-              <div className="pt-2 border-t border-slate-900 grid grid-cols-2 gap-2 text-xs font-mono">
+              <div className="pt-2 border-t border-slate-900 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
                 <div>
                   <span className="text-slate-500 block text-[10px]">PHYSICIANS</span>
                   <span className="text-slate-200 font-semibold">{node.activeDoctors} MD/CNMs</span>

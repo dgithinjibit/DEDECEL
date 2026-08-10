@@ -151,7 +151,7 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
                     <div>
                       <p className="text-[10px] text-slate-500">Date of Death</p>
                       <p className="font-medium text-slate-200">{cert.dateOfDeath} ({cert.ageAtDeath} yrs)</p>

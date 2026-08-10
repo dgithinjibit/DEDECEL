@@ -108,7 +108,7 @@ export const BlockExplorerModal: React.FC<BlockExplorerModalProps> = ({
                     <span className="text-slate-400 block truncate bg-slate-900/60 p-2 rounded-lg">{selectedBlock.previousHash}</span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 pt-1 text-[10px] text-slate-400">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2 pt-1 text-[10px] text-slate-400">
                     <div>
                       <span>Proof-of-Stake Validator:</span>
                       <p className="text-slate-200 font-bold truncate">{selectedBlock.validator}</p>

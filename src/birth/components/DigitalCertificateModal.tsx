@@ -199,7 +199,7 @@ export const DigitalCertificateModal: React.FC<DigitalCertificateModalProps> = (
             </div>
 
             {/* Attestation Signatures Footer */}
-            <div className="mt-8 pt-6 border-t border-slate-800 print:border-slate-300 grid grid-cols-2 gap-6 text-center text-xs">
+            <div className="mt-8 pt-6 border-t border-slate-800 print:border-slate-300 grid grid-cols-1 sm:grid-cols-2 print:grid-cols-2 gap-3 sm:gap-6 text-center text-xs">
               <div>
                 <div className="font-serif italic text-amber-300 print:text-slate-800 text-sm mb-1">
                   Dr. {record.attendingPhysicianName}

@@ -130,7 +130,7 @@ export const CertificatePDFGenerator: React.FC<CertificatePDFGeneratorProps> = (
 
         {/* Certificate Body Preview */}
         <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-5 text-xs">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <p className="text-[10px] text-slate-500 uppercase font-bold">Full Legal Name</p>
               <p className="text-sm font-bold text-white mt-0.5">
@@ -151,7 +151,7 @@ export const CertificatePDFGenerator: React.FC<CertificatePDFGeneratorProps> = (
             </div>
           </div>
 
-          <div className="border-t border-slate-800 pt-3 grid grid-cols-2 gap-4">
+          <div className="border-t border-slate-800 pt-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <p className="text-[10px] text-slate-500 uppercase font-bold">Attending Medical Examiner</p>
               <p className="text-xs text-slate-200 mt-0.5">{cert.attendingPhysicianName}</p>
