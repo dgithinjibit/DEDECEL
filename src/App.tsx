@@ -21,7 +21,9 @@ import {
   verifyDeathRecord,
   eraseDeathRecord,
   deathBackendEnabled,
+  AnchorOutcome,
 } from './services/deathRegistry';
+import { NearAnchorBadge } from './components/NearAnchorBadge';
 import { USER_PERSONAS } from './data/personas';
 import { DeathCertificate, FacultyMember, UserPersona, NetworkSpeed, JurisdictionMode, OfflineQueueItem } from './types';
 import { useWallet } from './wallet/WalletContext';
@@ -57,6 +59,12 @@ export default function App() {
   // Phase 4: server-computed salted hash per death cert id (from the real backend on CREATE).
   // Needed at APPROVE time to anchor the authoritative hash on NEAR. Empty in mock mode.
   const [certHashes, setCertHashes] = useState<Record<string, string>>({});
+
+  // Task #3: the NEAR anchoring result per cert id (real tx id / off-chain placeholder), so the
+  // UI can show a NearBlocks link instead of a throwaway alert. `lastAnchor` drives a small
+  // dismissable result panel right after an APPROVE.
+  const [anchorOutcomes, setAnchorOutcomes] = useState<Record<string, AnchorOutcome>>({});
+  const [lastAnchor, setLastAnchor] = useState<{ certId: string; outcome: AnchorOutcome } | null>(null);
 
   // Modals state
   const [showExplorerModal, setShowExplorerModal] = useState(false);
@@ -130,11 +138,9 @@ export default function App() {
         if (!certHash) throw new Error('no off-chain hash available to anchor');
 
         const outcome = await anchorDeathRecord(cert, certHash);
-        alert(
-          outcome.onChain
-            ? `Sealed on NEAR. Real transaction: ${outcome.txId}`
-            : `Sealed. Anchor recorded (${outcome.txId}). NEAR is disabled — set NEAR_* in backend/.env for a real on-chain tx.`
-        );
+        // Task #3: keep the outcome so the UI can render a NearBlocks link (no throwaway alert).
+        setAnchorOutcomes((prev) => ({ ...prev, [cert.id]: outcome }));
+        setLastAnchor({ certId: cert.id, outcome });
       } catch (e) {
         console.error('On-chain anchor failed:', e);
         alert(`Sealed in the visual ledger, but on-chain anchoring failed: ${(e as Error).message}`);
@@ -302,6 +308,26 @@ export default function App() {
         isSyncing={isSyncing}
       />
 
+      {/* Task #3: anchoring result — appears after an APPROVE, links the real tx to NearBlocks. */}
+      {lastAnchor && (
+        <div className="bg-[#232429] border-b border-slate-700/60">
+          <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-slate-200 mb-1">
+                Certificate #{lastAnchor.certId} sealed
+              </p>
+              <NearAnchorBadge txId={lastAnchor.outcome.txId} />
+            </div>
+            <button
+              onClick={() => setLastAnchor(null)}
+              className="shrink-0 text-xs text-slate-400 hover:text-white border border-slate-700 hover:border-brand-500 rounded-md px-2 py-1 transition-colors"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main View Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {domain === 'BIRTH' ? (
@@ -354,6 +380,7 @@ export default function App() {
                 onApproveCertificate={handleApproveCertificate}
                 onRevokeCertificate={handleRevokeCertificate}
                 onOpenExplorer={() => setShowExplorerModal(true)}
+                anchorOutcomes={anchorOutcomes}
               />
             )}
 
@@ -374,6 +401,7 @@ export default function App() {
                 backendEnabled={deathBackendEnabled}
                 onRealVerify={handleRealVerifyCertificate}
                 onErase={handleEraseCertificate}
+                anchorOutcomes={anchorOutcomes}
               />
             )}
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { DeathCertificate, UserPersona } from '../../types';
 import { CryptoEngine } from '../../services/cryptoEngine';
+import { NearAnchorBadge } from '../NearAnchorBadge';
+import { AnchorOutcome } from '../../services/deathRegistry';
 
 interface AgencyVerifierProps {
   persona: UserPersona;
@@ -13,6 +15,8 @@ interface AgencyVerifierProps {
   onRealVerify?: (cert: DeathCertificate) => Promise<{ isValid: boolean; anchoredHash: string | null }>;
   /** GDPR erasure: hard-delete the off-chain PII + salt. */
   onErase?: (cert: DeathCertificate) => Promise<boolean>;
+  /** Task #3: NEAR anchoring result per cert id, for the on-chain / NearBlocks badge. */
+  anchorOutcomes?: Record<string, AnchorOutcome>;
 }
 
 export const AgencyVerifier: React.FC<AgencyVerifierProps> = ({
@@ -22,7 +26,8 @@ export const AgencyVerifier: React.FC<AgencyVerifierProps> = ({
   isChainValid,
   backendEnabled = false,
   onRealVerify,
-  onErase
+  onErase,
+  anchorOutcomes = {},
 }) => {
   const [query, setQuery] = useState('');
   const [scannedResult, setScannedResult] = useState<DeathCertificate | null>(null);
@@ -278,6 +283,10 @@ export const AgencyVerifier: React.FC<AgencyVerifierProps> = ({
               {backendMsg && (
                 <p className="text-[11px] text-slate-300 font-mono leading-relaxed break-all">{backendMsg}</p>
               )}
+              {/* Task #3: independent on-chain proof — link this cert's anchor tx to NearBlocks. */}
+              <div className="pt-2 border-t border-slate-800/80">
+                <NearAnchorBadge txId={anchorOutcomes[scannedResult.id]?.txId ?? null} compact />
+              </div>
             </div>
           )}
 

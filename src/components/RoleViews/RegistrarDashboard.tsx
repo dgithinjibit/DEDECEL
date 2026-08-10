@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { DeathCertificate, UserPersona } from '../../types';
 import { CryptoEngine } from '../../services/cryptoEngine';
+import { NearAnchorBadge } from '../NearAnchorBadge';
+import { AnchorOutcome } from '../../services/deathRegistry';
 
 interface RegistrarDashboardProps {
   persona: UserPersona;
@@ -8,6 +10,8 @@ interface RegistrarDashboardProps {
   onApproveCertificate: (cert: DeathCertificate) => void;
   onRevokeCertificate: (cert: DeathCertificate, reason: string) => void;
   onOpenExplorer: () => void;
+  /** Task #3: NEAR anchoring result per cert id, for the on-chain / NearBlocks badge. */
+  anchorOutcomes?: Record<string, AnchorOutcome>;
 }
 
 export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
@@ -15,7 +19,8 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
   certificates,
   onApproveCertificate,
   onRevokeCertificate,
-  onOpenExplorer
+  onOpenExplorer,
+  anchorOutcomes = {},
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCert, setSelectedCert] = useState<DeathCertificate | null>(null);
@@ -34,7 +39,8 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
 
   const handleApprove = (cert: DeathCertificate) => {
     onApproveCertificate(cert);
-    alert(`Government Seal applied! Certificate #${cert.id} is now immutably anchored on-chain.`);
+    // The real anchoring result (on-chain tx vs off-chain placeholder) is shown by the
+    // NearAnchorBadge on the sealed card + the app-level result panel — no over-claiming alert.
     setSelectedCert(null);
   };
 
@@ -175,6 +181,13 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
                       <span>ZK Proof: {cert.zeroKnowledgeProof.substring(0, 20)}...</span>
                     </div>
                   </div>
+
+                  {/* Task #3: real NEAR anchoring status + NearBlocks link (sealed certs). */}
+                  {isSealed && (
+                    <div className="pt-2 border-t border-slate-800">
+                      <NearAnchorBadge txId={anchorOutcomes[cert.id]?.txId ?? null} compact />
+                    </div>
+                  )}
 
                   {/* Smart Contract Actions */}
                   <div className="pt-2 border-t border-slate-800 flex items-center justify-between gap-2">
