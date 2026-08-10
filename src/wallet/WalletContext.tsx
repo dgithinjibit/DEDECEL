@@ -50,6 +50,12 @@ export interface WalletState {
   sessionToken: string | null;
   /** Begin login. `desiredAccountId` is only used by the stub; the real wallet ignores it. */
   connect: (desiredAccountId?: string) => Promise<void>;
+  /**
+   * Prove ownership by signing the server challenge. MUST be called from a user click (a button)
+   * so the browser lets the wallet popup/redirect open — calling it automatically after connect
+   * gets the popup blocked ("Popup window blocked"). Only meaningful in real-wallet mode.
+   */
+  signIn: () => Promise<void>;
   /** Log out. */
   disconnect: () => void;
 }
@@ -147,32 +153,43 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       modalRef.current = setupModal(selector, { contractId: CONTRACT_ID });
 
       // Restore a prior verified session token (so a refresh doesn't force re-signing).
+      let restoredToken: string | null = null;
       try {
-        const savedToken = localStorage.getItem(TOKEN_KEY);
-        if (savedToken) setSessionToken(savedToken);
+        restoredToken = localStorage.getItem(TOKEN_KEY);
+        if (restoredToken) setSessionToken(restoredToken);
       } catch {
         /* ignore */
       }
 
-      // React to sign-in / sign-out happening in the wallet popup.
-      const applyState = async (accounts: { accountId: string }[]) => {
+      // React to connect / sign-out from the wallet.
+      const applyState = (accounts: { accountId: string }[]) => {
         const active = accounts[0]?.accountId ?? null;
         setAccountId(active);
         if (!active) {
-          // Signed out in the wallet.
           setIsAuthenticated(false);
           authInFlightFor.current = null;
           return;
         }
-        // Connected. Now prove ownership via signMessage — unless we already did for this account.
-        if (authInFlightFor.current === active) return;
-        authInFlightFor.current = active;
-        await authenticate(selector, active);
+        // Already have a valid session token (page refresh) → stay logged in, no re-sign.
+        if (restoredToken) {
+          setIsAuthenticated(true);
+          authInFlightFor.current = active;
+          return;
+        }
+        // Fresh connect → sign in automatically (one-click UX). This runs right after the modal
+        // connects; for redirect wallets (MyNearWallet) it redirects (no popup to block), and for
+        // extension wallets it's usually still within the click's activation window. If a browser
+        // DOES block the popup, authenticate() records the error and the login screen shows a
+        // "Sign in" button as a fallback second click.
+        if (authInFlightFor.current !== active) {
+          authInFlightFor.current = active;
+          void authenticate();
+        }
       };
 
       applyState(selector.store.getState().accounts);
       const subscription = selector.store.observable.subscribe((state) => {
-        void applyState(state.accounts);
+        applyState(state.accounts);
       });
       unsub = () => subscription.unsubscribe();
     })().catch((err) => {
@@ -187,11 +204,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   /**
-   * The challenge–response login. Called right after a wallet connects.
-   * On success: sets isAuthenticated + stores the session token.
-   * On failure (user rejects, key isn't full-access, network error): signs the user back out.
+   * The challenge–response login (a.k.a. signIn). MUST run from a user click so the wallet
+   * popup/redirect is allowed by the browser. On success: sets isAuthenticated + stores the
+   * session token. On failure (user rejects, key mismatch, network error): signs back out.
    */
-  const authenticate = async (selector: WalletSelector, activeAccountId: string) => {
+  const authenticate = async () => {
+    const selector = selectorRef.current;
+    if (!selector) {
+      setAuthError('wallet is still starting — try again in a moment');
+      return;
+    }
     setIsConnecting(true);
     setAuthError(null);
     try {
@@ -240,14 +262,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.error('[wallet] sign-in failed:', err);
       setAuthError((err as Error).message || 'sign-in failed');
       setIsAuthenticated(false);
+      // Allow a retry: clear the in-flight guard so the fallback "Sign in" button (or a re-connect)
+      // can trigger authenticate() again. Stay CONNECTED so the wallet stays selected.
       authInFlightFor.current = null;
-      // Signing failed → don't leave a half-connected state; sign back out of the wallet.
-      try {
-        const wallet = await selector.wallet();
-        await wallet.signOut();
-      } catch {
-        /* ignore */
-      }
     } finally {
       setIsConnecting(false);
     }
@@ -256,8 +273,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const connect = async (desiredAccountId?: string) => {
     setAuthError(null);
     if (USE_REAL_WALLET) {
-      // Open the wallet-selector modal; the account-change subscription handles the rest
-      // (including the signMessage login). isConnecting is managed by authenticate().
+      // Just open the wallet-selector modal to CONNECT (pick an account). Signing in is a
+      // separate, click-driven step (see signIn) so the browser doesn't block the popup.
       if (!modalRef.current) {
         setAuthError('wallet is still starting — try again in a moment');
         return;
@@ -323,6 +340,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     authError,
     sessionToken,
     connect,
+    signIn: authenticate,
     disconnect,
   };
 

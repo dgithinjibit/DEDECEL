@@ -6,10 +6,24 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
+    // NEAR wallet-selector libs are Node-oriented and reference `global` and `process.env`. Map
+    // them at build time so they don't throw "global/process is not defined". (`global`, `Buffer`
+    // and a runtime `process` shim are also set in src/main.tsx, which covers bare `process`
+    // lookups this define can't reach.)
+    define: {
+      global: 'globalThis',
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
+        // Ensure `buffer` resolves to the real polyfill package, not Vite's externalized stub.
+        buffer: 'buffer',
       },
+    },
+    optimizeDeps: {
+      // Pre-bundle the buffer polyfill so its Buffer export is available in the browser.
+      include: ['buffer'],
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.

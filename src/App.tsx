@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { HeaderNavbar } from './components/HeaderNavbar';
+import { Sidebar } from './components/Sidebar';
+import { TopBar } from './components/TopBar';
 import { NetworkBandwidthBar } from './components/NetworkBandwidthBar';
 import { PublicHomepage } from './components/PublicHomepage';
 import { MedicalDashboard } from './components/RoleViews/MedicalDashboard';
@@ -34,10 +35,14 @@ import { BirthApp } from './birth/BirthApp';
 type CertDomain = 'DEATH' | 'BIRTH';
 
 export default function App() {
-  const { isAuthenticated, accountId, disconnect } = useWallet();
+  const { isAuthenticated } = useWallet();
 
   // Domain switch (Death = original DEDECEL; Birth = folded-in DeBiCeL, ported in Phase 1.3).
   const [domain, setDomain] = useState<CertDomain>('DEATH');
+
+  // App-shell layout state: the mobile drawer (open/closed) and the desktop rail (collapsed?).
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const [ledger] = useState(() => new BlockchainLedger());
   const [syncEngine] = useState(() => new OfflineSyncEngine());
@@ -242,63 +247,42 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#28292e] text-[#ffffff] flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
-      
-      {/* Top Header & Navbar */}
-      <HeaderNavbar
+    <div className="min-h-screen bg-[#28292e] text-[#ffffff] flex font-sans selection:bg-brand-500 selection:text-slate-950">
+
+      {/* Left navigation rail (fixed on desktop, drawer on mobile) */}
+      <Sidebar
+        activeViewMode={activeViewMode}
+        onSelectViewMode={setActiveViewMode}
+        domain={domain}
+        onSelectDomain={setDomain}
         currentPersona={currentPersona}
         onSelectPersona={(persona) => {
           setCurrentPersona(persona);
           setActiveViewMode('PORTAL');
         }}
-        networkSpeed={networkSpeed}
-        onSelectNetworkSpeed={setNetworkSpeed}
-        pendingQueueCount={offlineQueue.filter(q => q.status === 'PENDING').length}
-        jurisdiction={jurisdiction}
-        onSelectJurisdiction={setJurisdiction}
         onOpenExplorer={() => setShowExplorerModal(true)}
         onOpenFhir={() => setShowFhirModal(true)}
         onOpenEdgeCases={() => setShowEdgeCasesModal(true)}
-        isChainValid={isChainValid}
-        activeViewMode={activeViewMode}
-        onSelectViewMode={setActiveViewMode}
+        jurisdiction={jurisdiction}
+        onSelectJurisdiction={setJurisdiction}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed((c) => !c)}
       />
 
-      {/* Domain switch (Birth / Death) + connected-wallet chip */}
-      <div className="bg-[#232429] border-b border-slate-700/60">
-        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-3">
-          <div className="inline-flex rounded-lg bg-[#1f2024] border border-slate-700 p-0.5">
-            <button
-              onClick={() => setDomain('DEATH')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                domain === 'DEATH' ? 'bg-brand-600 text-white' : 'text-slate-300 hover:text-white'
-              }`}
-            >
-              Death Certificates
-            </button>
-            <button
-              onClick={() => setDomain('BIRTH')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                domain === 'BIRTH' ? 'bg-brand-600 text-white' : 'text-slate-300 hover:text-white'
-              }`}
-            >
-              Birth Certificates
-            </button>
-          </div>
+      {/* Main column: top bar + content + footer. min-w-0 prevents flex overflow. */}
+      <div className="flex-1 min-w-0 flex flex-col">
 
-          <div className="flex items-center gap-2 text-xs">
-            <span className="hidden sm:inline-flex items-center text-slate-300 bg-[#1f2024] border border-slate-700 rounded-full px-3 py-1">
-              {accountId}
-            </span>
-            <button
-              onClick={disconnect}
-              className="inline-flex items-center text-slate-300 hover:text-white border border-slate-700 hover:border-brand-500 rounded-full px-3 py-1 transition-colors"
-            >
-              Disconnect
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Slim top bar (big slogan + network + wallet) */}
+      <TopBar
+        networkSpeed={networkSpeed}
+        onSelectNetworkSpeed={setNetworkSpeed}
+        pendingQueueCount={offlineQueue.filter(q => q.status === 'PENDING').length}
+        isChainValid={isChainValid}
+        onOpenExplorer={() => setShowExplorerModal(true)}
+        onOpenSidebar={() => setSidebarOpen(true)}
+      />
 
       {/* Network Bandwidth Status Bar */}
       <NetworkBandwidthBar
@@ -311,7 +295,7 @@ export default function App() {
       {/* Task #3: anchoring result — appears after an APPROVE, links the real tx to NearBlocks. */}
       {lastAnchor && (
         <div className="bg-[#232429] border-b border-slate-700/60">
-          <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-start justify-between gap-4">
+          <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-xs font-semibold text-slate-200 mb-1">
                 Certificate #{lastAnchor.certId} sealed
@@ -329,7 +313,7 @@ export default function App() {
       )}
 
       {/* Main View Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {domain === 'BIRTH' ? (
           <BirthApp />
         ) : activeViewMode === 'PUBLIC' ? (
@@ -422,7 +406,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="border-t border-slate-800 bg-[#28292e] py-6 text-center text-xs text-slate-300">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>© 2026 DEDECEL - Decentralized Death Certificate Ledger. Built on Immutable Smart Contract Infrastructure.</p>
           <div className="flex items-center gap-3">
             <button onClick={() => setShowExplorerModal(true)} className="hover:text-cyan-400">Block Explorer</button>
@@ -433,6 +417,8 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      </div>{/* /main column */}
 
       {/* Modals */}
       {showExplorerModal && (

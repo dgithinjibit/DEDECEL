@@ -33,6 +33,54 @@ import { verifySignature, verifyFullKeyBelongsToUser } from '@near-wallet-select
 /** The message the wallet shows the user when signing in. Human-readable on purpose. */
 const LOGIN_MESSAGE = 'Log in to DEDECEL';
 
+/**
+ * Whether to require the signing key be a FULL-ACCESS key (strict NEP-413).
+ * Default OFF, because most NEAR wallets (HOT, etc.) log dApps in with a *function-call* key —
+ * requiring full-access would reject normal logins. With it off we still confirm the key BELONGS
+ * to the claimed account (any permission), which blocks impersonation; we just don't demand it be
+ * full-access. Set AUTH_REQUIRE_FULL_ACCESS_KEY=true for high-security deployments.
+ */
+const REQUIRE_FULL_ACCESS_KEY = process.env.AUTH_REQUIRE_FULL_ACCESS_KEY === 'true';
+
+/** NEAR RPC endpoint for the configured network (used for the access-key ownership check). */
+function rpcUrl(): string {
+  return process.env.NEAR_NETWORK === 'mainnet'
+    ? 'https://rpc.mainnet.near.org'
+    : 'https://rpc.testnet.near.org';
+}
+
+/**
+ * Confirm `publicKey` is an access key of `accountId` — ANY permission (full-access or
+ * function-call). We ask the chain for that exact key via `view_access_key`: if it resolves, the
+ * key is on the account (so the signer really controls it); if the node returns an error, the key
+ * isn't there (an impersonation attempt) and we reject. This is the relaxed sibling of
+ * verifyFullKeyBelongsToUser, which additionally demands permission === "FullAccess".
+ */
+async function verifyKeyBelongsToUser(publicKey: string, accountId: string): Promise<boolean> {
+  try {
+    const res = await fetch(rpcUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 'auth',
+        method: 'query',
+        params: {
+          request_type: 'view_access_key',
+          finality: 'final',
+          account_id: accountId,
+          public_key: publicKey,
+        },
+      }),
+    });
+    const data = (await res.json()) as { result?: { permission?: unknown }; error?: unknown };
+    // A found key returns a `result` with a `permission`. A missing key returns `error`.
+    return !!data.result && data.result.permission !== undefined && !data.error;
+  } catch {
+    return false;
+  }
+}
+
 /** How long an unused nonce stays valid before we forget it. */
 const NONCE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -168,28 +216,45 @@ export function createAuthRouter(now: () => number = () => Date.now()): Router {
       return res.status(401).json({ error: 'signature does not match the challenge' });
     }
 
-    // (b) Does that public key actually belong to the claimed account as a FULL-access key?
-    // This is the check that stops someone signing with their own key but claiming to be
-    // someone else. It is an on-chain RPC lookup.
+    // (b) Does that public key actually belong to the claimed account? This is the check that
+    // stops someone signing with their OWN key but claiming to be someone else. It's an on-chain
+    // RPC lookup. By default we accept ANY key on the account (works with HOT & most wallets,
+    // which log in with a function-call key). Strict mode additionally demands a full-access key.
     let keyBelongs = false;
     try {
-      keyBelongs = await verifyFullKeyBelongsToUser({
-        publicKey,
-        accountId,
-        network: {
-          networkId: NETWORK_ID,
-          nodeUrl: NETWORK_ID === 'mainnet'
-            ? 'https://rpc.mainnet.near.org'
-            : 'https://rpc.testnet.near.org',
-        } as never,
-      });
+      keyBelongs = REQUIRE_FULL_ACCESS_KEY
+        ? await verifyFullKeyBelongsToUser({
+            publicKey,
+            accountId,
+            network: {
+              networkId: NETWORK_ID,
+              nodeUrl: NETWORK_ID === 'mainnet'
+                ? 'https://rpc.mainnet.near.org'
+                : 'https://rpc.testnet.near.org',
+            } as never,
+          })
+        : await verifyKeyBelongsToUser(publicKey, accountId);
     } catch {
       keyBelongs = false;
     }
     if (!keyBelongs) {
-      return res
-        .status(401)
-        .json({ error: 'that key is not a full-access key of this account' });
+      // Common cause: a MAINNET wallet (e.g. a HOT `.tg` or a `.near` account) signing into a
+      // TESTNET app (or vice-versa). Detect the likely mismatch and say so plainly, instead of
+      // the cryptic "key doesn't belong" — the key is real, it's just on the other network.
+      const looksMainnet = accountId.endsWith('.tg') || accountId.endsWith('.near');
+      const looksTestnet = accountId.endsWith('.testnet');
+      const mismatch =
+        (NETWORK_ID === 'testnet' && looksMainnet) || (NETWORK_ID === 'mainnet' && looksTestnet);
+      if (mismatch) {
+        return res.status(401).json({
+          error: `This looks like a ${looksMainnet ? 'mainnet' : 'testnet'} account, but the app is on ${NETWORK_ID}. Use a ${NETWORK_ID} account to log in.`,
+        });
+      }
+      return res.status(401).json({
+        error: REQUIRE_FULL_ACCESS_KEY
+          ? 'that key is not a full-access key of this account'
+          : 'that key does not belong to this account',
+      });
     }
 
     // Success: issue a session token the frontend stores and sends on future calls.
