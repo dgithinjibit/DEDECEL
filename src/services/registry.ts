@@ -75,13 +75,65 @@ export interface RegistryService {
 
 /* ------------------------------------------------------------------ */
 /* MOCK IMPLEMENTATION                                                 */
-/* Keeps an in-memory map of certId -> hash so the UI behaves the same */
-/* shape it will with the real backend. Not persisted; not a chain.    */
+/* Keeps a map of certId -> hash so the UI behaves the same shape it   */
+/* will with the real backend. This is NOT a chain, but it IS now      */
+/* persisted to the browser's localStorage so anchored records survive */
+/* a page refresh — the "database is localStorage for now" mode. When  */
+/* Supabase is wired in later, swap to the real registry via env flag  */
+/* and this store is simply ignored (see the seam at the bottom).      */
 /* ------------------------------------------------------------------ */
 
+/**
+ * A Map<string, T> that transparently mirrors itself into localStorage under `storageKey`.
+ * Falls back to a plain in-memory Map when localStorage is unavailable (e.g. SSR, private
+ * mode, or a security policy) — the app keeps working, it just won't persist.
+ */
+class PersistentMap<T> {
+  private mem: Map<string, T>;
+
+  constructor(private storageKey: string) {
+    this.mem = new Map(this.load());
+  }
+
+  /** Read + parse the backing store. Any corruption/absence yields an empty list. */
+  private load(): Array<[string, T]> {
+    try {
+      const raw = typeof localStorage !== 'undefined' ? localStorage.getItem(this.storageKey) : null;
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? (parsed as Array<[string, T]>) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /** Serialize the current entries back to localStorage (best-effort; ignores quota/errors). */
+  private save() {
+    try {
+      if (typeof localStorage === 'undefined') return;
+      localStorage.setItem(this.storageKey, JSON.stringify([...this.mem.entries()]));
+    } catch {
+      /* localStorage full or blocked — keep the in-memory copy, just don't persist. */
+    }
+  }
+
+  get(k: string): T | undefined {
+    return this.mem.get(k);
+  }
+
+  set(k: string, v: T): void {
+    this.mem.set(k, v);
+    this.save();
+  }
+}
+
 class MockRegistry implements RegistryService {
-  private anchored = new Map<string, { hash: string; anchoredAt: string; domain: CertDomain }>();
-  private birthByNationalId = new Map<string, { birthHash: string; registrationId: string }>();
+  private anchored = new PersistentMap<{ hash: string; anchoredAt: string; domain: CertDomain }>(
+    'dedecel:mock:anchored',
+  );
+  private birthByNationalId = new PersistentMap<{ birthHash: string; registrationId: string }>(
+    'dedecel:mock:birthByNationalId',
+  );
 
   async anchorHash(domain: CertDomain, certId: string, saltedHash: string): Promise<AnchorResult> {
     await tick();
