@@ -9,13 +9,16 @@
   We set DEDECEL_NO_LISTEN=1 BEFORE importing the app so server.ts skips its `app.listen(...)`
   (a serverless function must never bind a port — Vercel owns the socket).
 
+  IMPORTANT: the flag is set in ./_no-listen (imported first). ES imports are hoisted above this
+  module's body, so setting the env var here in the body would run AFTER server.js is imported —
+  too late. Importing _no-listen before server.js guarantees the flag is set first.
+
   Routing: vercel.json rewrites /auth/*, /v2/*, /api/v1/* to /api, so this one function serves
   the whole backend. It shares the frontend's domain, so there is no CORS and no separate URL.
 */
 
-process.env.DEDECEL_NO_LISTEN = '1';
-
-// Import AFTER the flag is set so the module-level listen() guard sees it.
+// MUST be first: sets DEDECEL_NO_LISTEN=1 before server.js is evaluated (see _no-listen.ts).
+import './_no-listen.js';
 import { app } from '../backend/src/server.js';
 
 // Let Express own body parsing (express.json). Without this, @vercel/node may consume the
