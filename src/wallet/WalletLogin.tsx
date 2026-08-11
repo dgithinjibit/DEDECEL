@@ -1,31 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useWallet } from './WalletContext';
 
 /*
   WALLET LOGIN / SIGN-UP SCREEN — letters only, no icons or images.
 
-  On a real deploy the button opens the HOT Wallet / NEAR wallet-selector popup;
-  for now it calls our stub `connect()`. There is no separate "sign up" vs "log in"
-  with wallets — connecting a wallet IS both.
+  REAL NEAR WALLET ONLY. Two steps:
+    1. "Connect Wallet"  -> opens the NEAR wallet-selector modal (HOT, MyNearWallet, etc.).
+    2. "Sign in"         -> once a wallet is connected, a click signs the backend challenge
+                            (NEP-413). The click is required so the browser doesn't block the
+                            wallet popup ("Popup window blocked").
+  There is NO demo/stub form: you cannot get past this screen without a real wallet + signature.
+  Connecting a wallet IS both sign-up and log-in on NEAR.
 */
 
 export const WalletLogin: React.FC = () => {
-  const { connect, signIn, isConnecting, isRealWallet, authError, isConnected, accountId: connectedAccount } =
+  const { connect, signIn, isConnecting, authError, isConnected, accountId: connectedAccount } =
     useWallet();
-  const [accountId, setAccountId] = useState('');
 
   const handleConnect = () => {
-    void connect(accountId);
+    void connect();
   };
 
   const handleSignIn = () => {
     void signIn();
   };
 
-  // In real mode, once a wallet is connected (account picked) but not yet verified, we show a
-  // dedicated "Sign in" button. Clicking it triggers the wallet signature FROM a user gesture,
-  // so the browser doesn't block the popup ("Popup window blocked").
-  const showSignInStep = isRealWallet && isConnected;
+  // Once a wallet is connected (account picked) but not yet verified, show the "Sign in" step.
+  // Clicking it triggers the wallet signature FROM a user gesture, so the browser doesn't block
+  // the popup ("Popup window blocked").
+  const showSignInStep = isConnected;
 
   return (
     <div className="min-h-screen bg-[#28292e] text-white flex items-center justify-center px-4 font-sans">
@@ -62,25 +65,6 @@ export const WalletLogin: React.FC = () => {
             )}
           </p>
 
-          {/* Stub-only account field. In real-wallet mode the wallet popup handles this. */}
-          {!isRealWallet && (
-            <>
-              <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                NEAR account &nbsp;<span className="text-slate-500">testnet · optional for demo</span>
-              </label>
-              <input
-                type="text"
-                value={accountId}
-                onChange={(e) => setAccountId(e.target.value)}
-                placeholder="alice.testnet"
-                className="w-full rounded-lg bg-[#1b1c20] border border-slate-700 px-3 py-2.5 text-sm
-                           text-white placeholder-slate-500 focus:outline-none focus:border-brand-500
-                           focus:ring-1 focus:ring-brand-500 mb-5"
-              />
-            </>
-          )}
-
-          {/* Step 2 (real mode): a dedicated Sign-in button so the wallet popup opens from a click. */}
           {showSignInStep ? (
             <button
               onClick={handleSignIn}
@@ -109,13 +93,12 @@ export const WalletLogin: React.FC = () => {
           )}
 
           <p className="text-[11px] text-slate-500 mt-5 leading-relaxed">
-            {isRealWallet
-              ? 'Opens your NEAR wallet (installed wallets appear first). You’ll approve a free signature to prove the account is yours — no gas, no transaction.'
-              : 'Demo mode connects a simulated wallet (not a real login). Set VITE_USE_REAL_WALLET=true for real NEAR sign-in.'}
+            Opens your NEAR wallet (installed wallets appear first). You’ll approve a free signature
+            to prove the account is yours — no gas, no transaction.
           </p>
 
-          {/* No wallet? Offer a way to get one. Shown only in real mode, before connecting. */}
-          {isRealWallet && !showSignInStep && (
+          {/* No wallet? Offer a way to get one (only before connecting). */}
+          {!showSignInStep && (
             <p className="text-[11px] text-slate-500 mt-3 leading-relaxed">
               Don’t have a NEAR wallet yet?{' '}
               <a
@@ -141,7 +124,7 @@ export const WalletLogin: React.FC = () => {
         </div>
 
         <p className="text-center text-[11px] text-slate-600 mt-6">
-          NEAR {isRealWallet ? 'testnet' : 'demo'} · $0 environment
+          NEAR testnet · $0 environment
         </p>
       </div>
     </div>

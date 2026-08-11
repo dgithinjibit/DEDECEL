@@ -5,25 +5,22 @@ import { apiUrl } from '../services/apiBase';
 /*
   WALLET CONTEXT — the app-wide "am I logged in?" state.
 
-  Two modes, chosen by the env flag VITE_USE_REAL_WALLET (mirrors the backend's real/mock seam):
+  REAL NEAR WALLET ONLY. There is no demo/stub mode: a bypassable "type any account" form must
+  never be reachable (it once let empty input through). Login is always a real wallet + a
+  cryptographic signature the backend verifies.
 
-    * REAL  (VITE_USE_REAL_WALLET === "true"):
-        Uses the NEAR wallet-selector. Pressing "Connect Wallet" opens a modal listing every
-        installed/available NEAR wallet (installed browser extensions float to the top via
-        `optimizeWalletOrder`). After the user picks a wallet and connects, we run a
-        CHALLENGE–RESPONSE login (NEP-413 signMessage) against the backend:
-          1. GET /auth/nonce                -> a one-time 32-byte challenge.
-          2. wallet.signMessage({...nonce}) -> the wallet asks the user to sign it (free, no gas).
-          3. POST /auth/verify              -> backend checks the signature AND that the key is a
-                                               full-access key of the account, then returns a token.
-        Only after step 3 succeeds is the user "authenticated". Merely connecting is NOT enough —
-        that is what stops someone from claiming an account they do not control.
+  Flow: pressing "Connect Wallet" opens the NEAR wallet-selector modal listing every installed/
+  available NEAR wallet (installed browser extensions float to the top via `optimizeWalletOrder`).
+  After the user picks a wallet and connects, we run a CHALLENGE–RESPONSE login (NEP-413
+  signMessage) against the backend:
+    1. GET /auth/nonce                -> a one-time 32-byte challenge.
+    2. wallet.signMessage({...nonce}) -> the wallet asks the user to sign it (free, no gas).
+    3. POST /auth/verify              -> backend checks the signature AND that the key belongs to
+                                         the account, then returns a session token.
+  Only after step 3 succeeds is the user "authenticated". Merely connecting is NOT enough — that
+  is what stops someone from claiming an account they do not control.
 
-    * STUB  (default, local dev only):
-        Fakes a connection so the app runs with zero blockchain setup. It is explicitly NOT
-        authenticated (isAuthenticated is false) so it can never be mistaken for a real login.
-
-  Either way the rest of the app reads `useWallet()`. Gate protected views on `isAuthenticated`.
+  The rest of the app reads `useWallet()`. Gate protected views on `isAuthenticated`.
 
   Jargon:
   - "wallet" = a tool that holds your blockchain account + keys and signs actions.
@@ -42,14 +39,12 @@ export interface WalletState {
   accountId: string | null;
   /** True while a connect / sign-in is in flight (show a spinner). */
   isConnecting: boolean;
-  /** True when the real NEAR wallet is active (vs the demo stub). */
-  isRealWallet: boolean;
   /** The last login error message (e.g. user rejected the signature), or null. */
   authError: string | null;
   /** Session token from the backend after a verified login (sent on protected API calls). */
   sessionToken: string | null;
-  /** Begin login. `desiredAccountId` is only used by the stub; the real wallet ignores it. */
-  connect: (desiredAccountId?: string) => Promise<void>;
+  /** Begin login — opens the NEAR wallet-selector modal so the user picks a wallet. */
+  connect: () => Promise<void>;
   /**
    * Prove ownership by signing the server challenge. MUST be called from a user click (a button)
    * so the browser lets the wallet popup/redirect open — calling it automatically after connect
@@ -60,9 +55,7 @@ export interface WalletState {
   disconnect: () => void;
 }
 
-const STORAGE_KEY = 'dedecel_wallet_session_v1';
 const TOKEN_KEY = 'dedecel_session_token_v1';
-const USE_REAL_WALLET = import.meta.env.VITE_USE_REAL_WALLET === 'true';
 const NETWORK = (import.meta.env.VITE_NEAR_NETWORK as 'testnet' | 'mainnet') || 'testnet';
 const CONTRACT_ID = import.meta.env.VITE_NEAR_CONTRACT_ID || '';
 
@@ -84,17 +77,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // ---- REAL WALLET: build the selector once, subscribe to account changes ----
   useEffect(() => {
-    if (!USE_REAL_WALLET) {
-      // STUB: restore a previous demo session so a refresh doesn't log you out.
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) setAccountId(saved);
-      } catch {
-        /* ignore storage errors */
-      }
-      return;
-    }
-
     let unsub: (() => void) | undefined;
     let cancelled = false;
 
@@ -270,34 +252,15 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
-  const connect = async (desiredAccountId?: string) => {
+  const connect = async () => {
     setAuthError(null);
-    if (USE_REAL_WALLET) {
-      // Just open the wallet-selector modal to CONNECT (pick an account). Signing in is a
-      // separate, click-driven step (see signIn) so the browser doesn't block the popup.
-      if (!modalRef.current) {
-        setAuthError('wallet is still starting — try again in a moment');
-        return;
-      }
-      modalRef.current.show();
+    // Open the wallet-selector modal to CONNECT (pick an account). Signing in is a separate,
+    // click-driven step (see signIn) so the browser doesn't block the popup.
+    if (!modalRef.current) {
+      setAuthError('wallet is still starting — try again in a moment');
       return;
     }
-
-    // STUB behaviour: fake the wallet round-trip and account id. NOT authenticated.
-    setIsConnecting(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      const id = (desiredAccountId && desiredAccountId.trim()) || 'demo-user.testnet';
-      setAccountId(id);
-      setIsAuthenticated(false); // stub can never be a real login
-      try {
-        localStorage.setItem(STORAGE_KEY, id);
-      } catch {
-        /* ignore */
-      }
-    } finally {
-      setIsConnecting(false);
-    }
+    modalRef.current.show();
   };
 
   const disconnect = () => {
@@ -309,34 +272,23 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch {
       /* ignore */
     }
-    if (USE_REAL_WALLET) {
-      (async () => {
-        try {
-          const wallet = await selectorRef.current?.wallet();
-          await wallet?.signOut();
-        } catch (err) {
-          console.error('[wallet] signOut failed:', err);
-        }
-        setAccountId(null);
-      })();
-      return;
-    }
-    setAccountId(null);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* ignore */
-    }
+    (async () => {
+      try {
+        const wallet = await selectorRef.current?.wallet();
+        await wallet?.signOut();
+      } catch (err) {
+        console.error('[wallet] signOut failed:', err);
+      }
+      setAccountId(null);
+    })();
   };
 
   const value: WalletState = {
     isConnected: accountId !== null,
-    // In real mode, "logged in" requires a verified signature. In stub mode there is no backend
-    // to verify against, so connecting is treated as access (dev convenience only).
-    isAuthenticated: USE_REAL_WALLET ? isAuthenticated : accountId !== null,
+    // "Logged in" requires a backend-verified signature — connecting alone is never enough.
+    isAuthenticated,
     accountId,
     isConnecting,
-    isRealWallet: USE_REAL_WALLET,
     authError,
     sessionToken,
     connect,

@@ -8,8 +8,6 @@ interface ImportMetaEnv {
    * dev so relative paths hit the Vite proxy. See src/services/apiBase.ts.
    */
   readonly VITE_API_BASE_URL?: string;
-  /** When "true", use the real NEAR wallet-selector (HOT Wallet). Otherwise a demo stub wallet. */
-  readonly VITE_USE_REAL_WALLET?: string;
   /** NEAR network the wallet connects to: "testnet" (default) or "mainnet". */
   readonly VITE_NEAR_NETWORK?: string;
   /** The anchor contract account the wallet signs into, e.g. "registry-demo.testnet". */

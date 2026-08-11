@@ -17,3 +17,6 @@ contract/target/
 .vscode/
 .vercel
 .env.bak
+
+# Supabase CLI scratch state
+supabase/.temp/
