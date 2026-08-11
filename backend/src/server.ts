@@ -6,6 +6,7 @@ import { generateSalt, hashCertificate, verifyCertificate } from './hashing.js';
 import { createV1Router } from './v1compat.js';
 import { createNearClient } from './near.js';
 import { createAuthRouter } from './auth.js';
+import { createVerifyRouter } from './verify.js';
 
 /*
   FRESH API LAYER (Phase 2.3).
@@ -45,6 +46,9 @@ app.use('/api/v1', createV1Router(store));
 
 // Wallet login (NEP-413 challenge/verify): GET /auth/nonce, POST /auth/verify.
 app.use('/auth', createAuthRouter());
+
+// External, PII-free verification API for OTHER projects (API-key gated): /verify/v1/*.
+app.use('/verify/v1', createVerifyRouter(store));
 
 function parseDomain(raw: string): Domain | null {
   const d = raw.toUpperCase();

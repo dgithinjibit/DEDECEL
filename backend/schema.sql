@@ -16,13 +16,22 @@
 --   * `cert_hash` is the fingerprint that gets anchored on-chain. It is safe to
 --     expose; the raw data and salt are not.
 --
--- Run this in the Supabase SQL editor once to create the tables.
+-- IMPORTANT — how the backend uses these tables (backend/src/store.ts):
+--   The backend stores the WHOLE submitted certificate in the `payload` jsonb column
+--   and only ever writes a handful of top-level columns: id, payload, salt, cert_hash,
+--   status, anchor_tx_id, anchored_at, created_at, updated_at, plus the lookup id(s)
+--   national_id (death) / mother_national_id + father_national_id (birth). The many
+--   detailed PII columns below are OPTIONAL mirror fields — they may be null. That is
+--   why the human-name / date columns are nullable (they used to be NOT NULL, which
+--   rejected every insert since the code leaves them in `payload`).
+--
+-- Run this in the Supabase SQL editor once to create the tables. If you created an
+-- earlier version with NOT NULL on deceased_name/date_of_death/child_first_name/etc.,
+-- run the ALTER block in schema-migrate.sql to relax them, or drop+recreate here.
 -- ============================================================================
 
 -- Enable pgcrypto for gen_random_uuid() (Supabase has this available).
 create extension if not exists pgcrypto;
-
--- Shared enum-ish check via text; kept simple for a beginner-friendly schema.
 
 -- ----------------------------------------------------------------------------
 -- BIRTH certificates
@@ -31,9 +40,9 @@ create table if not exists birth_certificates (
   -- Identity
   id                text primary key,                    -- e.g. REG-2026-98124 (registration id)
   child_temp_id     text,
-  child_first_name  text not null,
-  child_last_name   text not null,
-  date_of_birth     text not null,
+  child_first_name  text,                                -- optional mirror; PII lives in payload
+  child_last_name   text,                                -- optional mirror
+  date_of_birth     text,                                -- optional mirror
   time_of_birth     text,
   place_of_birth    text,
   facility_name     text,
@@ -45,9 +54,9 @@ create table if not exists birth_certificates (
   apgar_5_min       integer,
   birth_type        text,
 
-  -- Parents (PII)
-  mother_national_id text not null,
-  mother_legal_name  text not null,
+  -- Parents. mother_national_id / father_national_id ARE set by the backend (lookup keys).
+  mother_national_id text,
+  mother_legal_name  text,                               -- optional mirror
   father_national_id text,
   father_legal_name  text,
   parent_contact_email text,
@@ -79,15 +88,15 @@ create index if not exists idx_birth_hash        on birth_certificates (cert_has
 -- DEATH certificates
 -- ----------------------------------------------------------------------------
 create table if not exists death_certificates (
-  -- Identity
+  -- Identity. national_id IS set by the backend (lookup key).
   id             text primary key,                       -- e.g. CERT-2026-000123
-  national_id    text not null,
+  national_id    text,
   first_name     text,
   second_name    text,
   last_name      text,
-  deceased_name  text not null,
+  deceased_name  text,                                   -- optional mirror; PII lives in payload
   date_of_birth  text,
-  date_of_death  text not null,
+  date_of_death  text,                                   -- optional mirror
   time_of_death  text,
   place_of_death text,
   place_type     text,

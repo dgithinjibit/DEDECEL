@@ -59,7 +59,16 @@ class SupabaseStore implements CertStore {
     return 'supabase';
   }
   async insert(domain: Domain, row: StoredCert) {
-    const { data, error } = await this.db.from(TABLE[domain]).insert(row).select().single();
+    // Drop keys whose value is null/undefined before inserting. StoredCert carries columns for
+    // BOTH domains (e.g. mother_national_id/father_national_id are birth-only, national_id is
+    // death-only); a death row leaves the birth-only ones null and vice-versa. Those columns do
+    // not exist on the other table, so sending them makes Supabase reject the insert with
+    // "Could not find the 'x' column ... in the schema cache". Stripping nulls lets each table
+    // receive only the columns it actually defines, and Postgres applies its own defaults.
+    const clean = Object.fromEntries(
+      Object.entries(row).filter(([, v]) => v !== null && v !== undefined)
+    );
+    const { data, error } = await this.db.from(TABLE[domain]).insert(clean).select().single();
     if (error) throw new Error(`insert failed: ${error.message}`);
     return data as StoredCert;
   }
@@ -155,6 +164,14 @@ class MemoryStore implements CertStore {
 
 /** Build the active store from env. Supabase if configured, else in-memory. */
 export function createStore(): CertStore {
+  // Explicit override for tests: `import 'dotenv/config'` in server.ts reloads .env from disk,
+  // which can repopulate SUPABASE_* even after a test does `delete process.env.SUPABASE_URL`.
+  // That would silently run the test suite against the REAL database. This flag wins over .env,
+  // so a test can force the in-memory store deterministically.
+  if (process.env.DEDECEL_FORCE_MEMORY_STORE === '1') {
+    console.log('[store] DEDECEL_FORCE_MEMORY_STORE=1 — using in-memory store');
+    return new MemoryStore();
+  }
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_KEY;
   if (url && key) {

@@ -9,6 +9,10 @@
 */
 process.env.DEDECEL_HASH_PEPPER ||= 'test-pepper-please-change-in-prod';
 process.env.DEDECEL_NO_LISTEN = '1'; // don't auto-bind; we control the port
+// Force the in-memory store. Deleting SUPABASE_* is not enough on its own: server.ts runs
+// `import 'dotenv/config'` (hoisted above these lines), which reloads .env from disk and can
+// re-set SUPABASE_URL — silently pointing the test at the REAL database. This flag wins.
+process.env.DEDECEL_FORCE_MEMORY_STORE = '1';
 delete process.env.SUPABASE_URL; // force memory store
 delete process.env.SUPABASE_SERVICE_KEY;
 delete process.env.NEAR_CONTRACT_ID; // force NEAR disabled (local: placeholder anchoring)

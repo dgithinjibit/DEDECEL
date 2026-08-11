@@ -11,7 +11,8 @@
     "test:store": "tsx src/store.test.ts",
     "test:api": "tsx src/api.test.ts",
     "test:auth": "tsx src/auth.test.ts",
-    "test:all": "npm run test:hash && npm run test:store && npm run test:api && npm run test:auth",
+    "test:verify": "tsx src/verify.test.ts",
+    "test:all": "npm run test:hash && npm run test:store && npm run test:api && npm run test:auth && npm run test:verify",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

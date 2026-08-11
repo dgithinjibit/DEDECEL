@@ -16,3 +16,4 @@ contract/target/
 .idea/
 .vscode/
 .vercel
+.env.bak

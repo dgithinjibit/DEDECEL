@@ -6,6 +6,7 @@
   update (anchor fields), HARD delete (GDPR erasure), and the cross-ledger birth lookup.
   We force the memory store by clearing any Supabase env so this never touches a real DB.
 */
+process.env.DEDECEL_FORCE_MEMORY_STORE = '1'; // wins even if .env repopulates SUPABASE_*
 delete process.env.SUPABASE_URL;
 delete process.env.SUPABASE_SERVICE_KEY;
 
