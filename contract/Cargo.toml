@@ -18,16 +18,16 @@ crate-type = ["cdylib", "rlib"]
 # It gives us #[near] macros, on-chain storage collections (LookupMap), logging, etc.
 near-sdk = "5.5.0"
 
+# zk-encoding — the SHARED, single-source-of-truth crate for snarkjs→NEAR byte encoding.
+# The contract's Groth16 verifier and the (host/WASM) re-encoder both use these exact
+# functions, so the little-endian / Fq2-ordering layout is defined in exactly one place.
+zk-encoding = { path = "../crates/zk-encoding" }
+
 [dev-dependencies]
 # Only needed while running `cargo test` on our machine (not shipped on-chain).
 # This provides a fake blockchain environment so we can unit-test the contract locally.
 near-sdk = { version = "5.5.0", features = ["unit-testing"] }
 
-# Release-build settings that keep the compiled .wasm small and cheap to deploy.
-[profile.release]
-codegen-units = 1
-opt-level = "z"       # optimize for small size ("z" = smallest)
-lto = true            # link-time optimization
-debug = false
-panic = "abort"
-overflow-checks = true
+# NOTE: the wasm release profile now lives in the WORKSPACE ROOT Cargo.toml
+# (../Cargo.toml). Cargo only honours [profile.*] in the workspace root, so keeping
+# it here would be silently ignored once this crate became a workspace member.

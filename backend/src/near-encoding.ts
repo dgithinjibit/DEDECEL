@@ -22,9 +22,14 @@
   (Ethereum/EIP-197 swaps them); the Rust verifier MUST assume the same order this file produces.
 */
 
-/** BN254 field modulus (Fq). Field elements are reduced mod this before encoding. */
+/**
+ * BN254 BASE field modulus (Fq) — the field the G1/G2 point *coordinates* live in, so this is
+ * what coordinate negation (`-A`, `-y`) reduces against. This is `q`, NOT the scalar field `r`
+ * (which ends in ...495617). The two share leading digits, so a mix-up here is silent: it makes
+ * every valid proof reject on-chain. Must match FQ_LE in crates/zk-encoding/src/lib.rs.
+ */
 const FQ =
-  21888242871839275222246405745257275088548364400416034343698204186575808495617n;
+  21888242871839275222246405745257275088696311157297823662689037894645226208583n;
 
 /** Serialize a single field element (given as a decimal or 0x string) to 32-byte little-endian. */
 export function fieldToLe32(value: string): Uint8Array {

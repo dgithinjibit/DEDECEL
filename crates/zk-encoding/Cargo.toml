@@ -1,0 +1,10 @@
+# zk-encoding — the single source of truth for snarkjs→NEAR Groth16 byte encoding.
+# Pure Rust, no dependencies, no_std, so BOTH the on-chain contract (wasm) and any host
+# tool can depend on it without pulling anything in. See src/lib.rs for the byte layout.
+[package]
+name = "zk-encoding"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["rlib"]

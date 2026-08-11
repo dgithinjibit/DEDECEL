@@ -15,8 +15,10 @@ const { fieldToLe32, g1ToLe, g2ToLe, negateG1, encodeProofForNear, toHex } = awa
   './near-encoding.js'
 );
 
+// BN254 BASE field q (coordinate field), matching near-encoding.ts + the Rust FQ_LE constant.
+// NOT the scalar field r (...495617) — coordinate negation reduces mod q.
 const FQ =
-  21888242871839275222246405745257275088548364400416034343698204186575808495617n;
+  21888242871839275222246405745257275088696311157297823662689037894645226208583n;
 
 let passed = 0;
 let failed = 0;

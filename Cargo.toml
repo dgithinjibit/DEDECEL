@@ -1,0 +1,24 @@
+# Cargo WORKSPACE root for the Rust side of BIDECEL.
+#
+# Two members:
+#   * contract      — the on-chain NEAR smart contract (anchor + on-chain Groth16 verify)
+#   * crates/zk-encoding — the shared snarkjs→NEAR byte-encoding crate (single source of truth)
+#
+# Making these a workspace lets the contract depend on zk-encoding by path, so the encoding
+# logic is defined exactly ONCE and can never drift between the verifier and the re-encoder.
+# (The TypeScript backend is pinned to the same definition via golden vectors — see
+# backend/src/near-encoding.test.ts.)
+[workspace]
+resolver = "2"
+members = ["contract", "crates/zk-encoding"]
+
+# Release-build settings that keep the compiled contract .wasm small and cheap to deploy.
+# (Cargo only honours [profile.*] at the workspace root, so it lives here, not in the
+# contract crate.)
+[profile.release]
+codegen-units = 1
+opt-level = "z"       # optimize for small size ("z" = smallest)
+lto = true            # link-time optimization
+debug = false
+panic = "abort"
+overflow-checks = true

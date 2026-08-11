@@ -61,6 +61,17 @@ a real runtime. Two things therefore remain UNPROVEN until we run one real proof
 These are LOW-effort to fix but MUST be validated with a real proof — do NOT treat on-chain verify
 as "working" until a testnet proof verifies true (and a tampered one verifies false).
 
+### ✅ Resolved 2026-08-11: wrong field modulus in coordinate negation (was a third latent bug)
+
+The `FQ` constant used to negate G1 coordinates (`-A`, `-y` in the pairing equation) was set to the
+BN254 **scalar field r** (`…495617`) instead of the **base field q** (`…208583`) — coordinates live
+in Fq, so negation must reduce mod q. Both the Rust crate (`crates/zk-encoding/src/lib.rs::FQ_LE`,
+whose bytes were additionally corrupted) and the TS re-encoder (`backend/src/near-encoding.ts`) held
+the same wrong value, so their golden vectors agreed and every test passed — the bug was invisible
+and would have made **valid proofs reject on-chain**. Fixed on both sides + `near-encoding.test.ts`;
+added a `fq_le_is_base_field_q` regression guard that reconstructs q from decimal and pins the bytes.
+All suites re-run green (zk-encoding 9/9, near-encoding TS 13/13, ZK e2e 6/6, contract 6/6).
+
 ## PM notes / risk
 
 - **On-chain verification is optional for MVP.** Off-chain proof verification already works
