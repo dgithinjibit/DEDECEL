@@ -226,7 +226,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <span
                     className={`mt-0.5 w-6 h-6 shrink-0 rounded-md border flex items-center justify-center text-[10px] font-bold ${
                       persona.role === 'ADMIN'
-                        ? 'text-amber-400 border-amber-400/40'
+                        ? 'text-brand-200 border-brand-300/50 bg-brand-500/10'
                         : 'text-brand-300 border-brand-400/40'
                     }`}
                   >

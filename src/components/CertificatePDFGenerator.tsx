@@ -107,7 +107,7 @@ export const CertificatePDFGenerator: React.FC<CertificatePDFGeneratorProps> = (
         
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 text-slate-400 hover:text-white bg-slate-800 p-2 rounded-none transition"
+          className="absolute top-6 right-6 text-slate-400 hover:text-white bg-slate-800 p-2 rounded-lg transition"
         >
           Close
         </button>
@@ -199,13 +199,13 @@ export const CertificatePDFGenerator: React.FC<CertificatePDFGeneratorProps> = (
         <div className="flex items-center justify-end gap-3 pt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2.5 rounded-none bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
+            className="px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
           >
             Close
           </button>
           <button
             onClick={handleDownloadPDF}
-            className="px-6 py-2.5 rounded-none font-bold text-xs transition shadow-lg flex items-center gap-2 text-slate-950 bg-cyan-500 hover:bg-cyan-400"
+            className="px-6 py-2.5 rounded-lg font-bold text-xs transition shadow-lg flex items-center gap-2 text-slate-950 bg-cyan-500 hover:bg-cyan-400"
           >
             <span>Download Official PDF Certificate</span>
           </button>

@@ -57,7 +57,7 @@ export const EdgeCasesGrillModal: React.FC<EdgeCasesGrillModalProps> = ({
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-none transition"
+            className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-lg transition"
           >
             Close
           </button>
@@ -73,7 +73,7 @@ export const EdgeCasesGrillModal: React.FC<EdgeCasesGrillModalProps> = ({
               <button
                 key={s.id}
                 onClick={() => setActiveScenarioId(s.id)}
-                className={`w-full text-left p-3 rounded-none transition border ${
+                className={`w-full text-left p-3 rounded-lg transition border ${
                   activeScenarioId === s.id
                     ? 'bg-amber-500/10 border-amber-500/40 text-amber-300'
                     : 'bg-slate-950/60 border-slate-800/80 hover:bg-slate-800 text-slate-300'
@@ -126,7 +126,7 @@ export const EdgeCasesGrillModal: React.FC<EdgeCasesGrillModalProps> = ({
               <div className="pt-3 border-t border-slate-800 flex items-center justify-end">
                 <button
                   onClick={() => handleRunInteractiveTest(activeScenario)}
-                  className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-5 py-2.5 rounded-none text-xs transition shadow-lg shadow-amber-500/20 flex items-center gap-2"
+                  className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-xs transition shadow-lg shadow-amber-500/20 flex items-center gap-2"
                 >
                   <span>{activeScenario.interactiveActionLabel}</span>
                 </button>

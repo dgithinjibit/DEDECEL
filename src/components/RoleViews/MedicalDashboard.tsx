@@ -200,7 +200,7 @@ export const MedicalDashboard: React.FC<MedicalDashboardProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setActiveTab('ROLE_LANDING')}
-              className={`px-4 py-2 rounded-none text-xs font-semibold transition flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-2 ${
                 activeTab === 'ROLE_LANDING'
                   ? 'bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/20'
                   : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
@@ -211,7 +211,7 @@ export const MedicalDashboard: React.FC<MedicalDashboardProps> = ({
 
             <button
               onClick={() => setActiveTab('NEW_CERTIFICATE')}
-              className={`px-4 py-2 rounded-none text-xs font-semibold transition flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-2 ${
                 activeTab === 'NEW_CERTIFICATE'
                   ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/20'
                   : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
@@ -222,7 +222,7 @@ export const MedicalDashboard: React.FC<MedicalDashboardProps> = ({
 
             <button
               onClick={() => setActiveTab('MY_ISSUED_RECORDS')}
-              className={`px-4 py-2 rounded-none text-xs font-semibold transition flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-2 ${
                 activeTab === 'MY_ISSUED_RECORDS'
                   ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/20'
                   : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
@@ -336,7 +336,7 @@ export const MedicalDashboard: React.FC<MedicalDashboardProps> = ({
             </div>
 
             {/* Import FHIR Button */}
-            <label className="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-none text-xs font-medium flex items-center gap-1.5 transition">
+            <label className="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
               <span>Import FHIR HL7 Record</span>
               <input type="file" accept=".json" onChange={handleFileUploadFHIR} className="hidden" />
             </label>
@@ -452,7 +452,7 @@ export const MedicalDashboard: React.FC<MedicalDashboardProps> = ({
                 type="button"
                 onClick={handleRunAiSanityCheck}
                 disabled={isCheckingAi}
-                className="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 px-3 py-1 rounded-none text-[11px] font-semibold flex items-center gap-1.5 transition"
+                className="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 px-3 py-1 rounded-lg text-[11px] font-semibold flex items-center gap-1.5 transition"
               >
                 <span>{isCheckingAi ? 'Validating Clinical Logic…' : 'AI Clinical Sanity Check'}</span>
               </button>
@@ -561,7 +561,7 @@ export const MedicalDashboard: React.FC<MedicalDashboardProps> = ({
               <button
                 type="button"
                 onClick={handleSignCertificate}
-                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-none text-xs transition flex items-center justify-center gap-2"
+                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-lg text-xs transition flex items-center justify-center gap-2"
               >
                 <span>Apply Digital ECDSA Signature</span>
               </button>
@@ -577,7 +577,7 @@ export const MedicalDashboard: React.FC<MedicalDashboardProps> = ({
             <button
               type="submit"
               disabled={!isSigned}
-              className={`px-6 py-2.5 rounded-none font-bold text-xs shadow-lg transition flex items-center gap-2 ${
+              className={`px-6 py-2.5 rounded-lg font-bold text-xs shadow-lg transition flex items-center gap-2 ${
                 isSigned
                   ? 'bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 shadow-cyan-500/20'
                   : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'

@@ -195,13 +195,13 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
                       <>
                         <button
                           onClick={() => handleApprove(cert)}
-                          className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold py-2 rounded-none text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/10"
+                          className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold py-2 rounded-lg text-xs transition flex items-center justify-center gap-1.5 shadow-md shadow-emerald-500/10"
                         >
                           <span>Apply On-Chain State Seal</span>
                         </button>
                         <button
                           onClick={() => { setSelectedCert(cert); setShowRevokeModal(true); }}
-                          className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 px-3 py-2 rounded-none text-xs font-medium transition"
+                          className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 px-3 py-2 rounded-lg text-xs font-medium transition"
                         >
                           Revoke
                         </button>
@@ -263,13 +263,13 @@ export const RegistrarDashboard: React.FC<RegistrarDashboardProps> = ({
             <div className="flex items-center justify-end gap-2 pt-2">
               <button
                 onClick={() => setShowRevokeModal(false)}
-                className="px-4 py-2 rounded-none bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium"
+                className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleRevoke(selectedCert)}
-                className="px-4 py-2 rounded-none bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition"
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition"
               >
                 Confirm On-Chain Revocation
               </button>

@@ -30,15 +30,48 @@ import { DeathCertificate, FacultyMember, UserPersona, NetworkSpeed, Jurisdictio
 import { useWallet } from './wallet/WalletContext';
 import { WalletLogin } from './wallet/WalletLogin';
 import { BirthApp } from './birth/BirthApp';
+import { OnboardingWizard } from './onboarding/OnboardingWizard';
+import { OnboardingResult, OrgRoleId } from './onboarding/types';
 
 /** Which certificate domain the user is viewing. DEATH is the original app; BIRTH is the folded-in DeBiCeL. */
 type CertDomain = 'DEATH' | 'BIRTH';
 
+/**
+ * Map an org-tree role chosen in the onboarding wizard onto the app's existing death-side persona.
+ * (Birth-side roles are handled by BirthApp's own role navigation; here we only pick a death persona
+ * so the death dashboard opens as the right actor.) This keeps the wizard decoupled from the older
+ * persona catalog — one place to translate.
+ */
+function personaKeyForRole(roleId: OrgRoleId): keyof typeof USER_PERSONAS {
+  switch (roleId) {
+    case 'DEATH_FORENSIC':
+    case 'DEATH_ATTENDING':
+      return 'MEDICAL_OFFICER';
+    case 'DEATH_RECORDS':
+      return 'REGISTRAR';
+    case 'DEATH_MORTICIAN':
+      return 'MEDICAL_OFFICER';
+    case 'CIVIL_REGISTRAR':
+    case 'BIRTH_CIVIL_REGISTRAR':
+      return 'REGISTRAR';
+    case 'HOSPITAL_ADMIN':
+      return 'ADMIN';
+    case 'BIRTH_JUDICIAL_AUDITOR':
+      return 'SYSTEM_AUDITOR';
+    default:
+      return 'MEDICAL_OFFICER';
+  }
+}
+
 export default function App() {
-  const { isAuthenticated, isDemo } = useWallet();
+  const { isAuthenticated, isDemo, accountId } = useWallet();
 
   // Domain switch (Death = original BIDECEL; Birth = folded-in DeBiCeL, ported in Phase 1.3).
   const [domain, setDomain] = useState<CertDomain>('DEATH');
+
+  // Onboarding: the wizard's result, or null until the user has been routed. Shown once after auth
+  // (or demo) and before the dashboard. See src/onboarding + memory dedecel-org-tree-onboarding.
+  const [onboarding, setOnboarding] = useState<OnboardingResult | null>(null);
 
   // App-shell layout state: the mobile drawer (open/closed) and the desktop rail (collapsed?).
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -248,6 +281,33 @@ export default function App() {
     return <WalletLogin />;
   }
 
+  // Onboarding gate: once past the wallet gate, route the user with the wizard (citizen vs faculty
+  // → side → role) before showing any dashboard. Applying the result sets the domain + the acting
+  // persona; citizens are routed straight to the public/family verify view.
+  if (!onboarding) {
+    return (
+      <OnboardingWizard
+        accountId={accountId}
+        onComplete={(result) => {
+          if (result.kind === 'CITIZEN') {
+            // Family/citizen: death-domain public view is the verify canvas (national-id + cert-id).
+            setDomain('DEATH');
+            setActiveViewMode('PUBLIC');
+            setCurrentPersona(USER_PERSONAS.FAMILY);
+          } else {
+            // Faculty: open the side they chose, as the mapped persona, in their portal.
+            setDomain(result.side === 'BIRTHS' ? 'BIRTH' : 'DEATH');
+            setActiveViewMode('PORTAL');
+            if (result.roleId) {
+              setCurrentPersona(USER_PERSONAS[personaKeyForRole(result.roleId)]);
+            }
+          }
+          setOnboarding(result);
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#28292e] text-[#ffffff] flex font-sans selection:bg-brand-500 selection:text-slate-950">
 
@@ -406,17 +466,68 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800 bg-[#28292e] py-6 text-center text-xs text-slate-300">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© 2026 BIDECEL - Decentralized Death Certificate Ledger. Built on Immutable Smart Contract Infrastructure.</p>
-          <div className="flex items-center gap-3">
-            <button onClick={() => setShowExplorerModal(true)} className="hover:text-cyan-400">Block Explorer</button>
-            <span>•</span>
-            <button onClick={() => setShowFhirModal(true)} className="hover:text-emerald-400">FHIR HL7 Bridge</button>
-            <span>•</span>
-            <button onClick={() => setShowEdgeCasesModal(true)} className="hover:text-amber-400">Edge Cases Grill</button>
+      {/* Footer — a registry "colophon": the foot-of-the-ledger stamp that certifies the page.
+          The seal line reports live chain state (validity + height) in the registry's own
+          monospace vernacular; the utility links sit quietly under the single brand accent. */}
+      <footer className="border-t border-brand-900/40 bg-[#232429]">
+        <div className="max-w-6xl mx-auto px-4 py-7">
+          {/* Seal row: the authenticity stamp. */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              {/* Wax-seal glyph: a bronze ring enclosing the ledger's initial. */}
+              <span
+                aria-hidden
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-brand-500/50 bg-brand-500/10 font-mono text-sm font-bold tracking-tighter text-brand-300"
+              >
+                B
+              </span>
+              <div className="leading-tight">
+                <div className="font-mono text-[13px] tracking-tight text-slate-200">
+                  BIDECEL <span className="text-brand-400">Registry Ledger</span>
+                </div>
+                <div className="flex items-center gap-2 font-mono text-[11px] text-slate-500">
+                  <span
+                    className={`inline-block h-1.5 w-1.5 rounded-full ${
+                      isChainValid ? 'bg-brand-400' : 'bg-red-400'
+                    }`}
+                  />
+                  <span className={isChainValid ? 'text-brand-300/80' : 'text-red-300'}>
+                    {isChainValid ? 'chain verified' : 'chain broken'}
+                  </span>
+                  <span className="text-slate-700">·</span>
+                  <span>height {blocks.length.toString().padStart(4, '0')}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Utility links — one accent, no rainbow. Hairline dividers echo a ruled ledger. */}
+            <nav className="flex items-center divide-x divide-slate-700/60 text-xs">
+              <button
+                onClick={() => setShowExplorerModal(true)}
+                className="px-3 text-slate-400 transition-colors first:pl-0 hover:text-brand-300"
+              >
+                Block Explorer
+              </button>
+              <button
+                onClick={() => setShowFhirModal(true)}
+                className="px-3 text-slate-400 transition-colors hover:text-brand-300"
+              >
+                FHIR HL7 Bridge
+              </button>
+              <button
+                onClick={() => setShowEdgeCasesModal(true)}
+                className="px-3 text-slate-400 transition-colors hover:text-brand-300"
+              >
+                Edge Cases Grill
+              </button>
+            </nav>
           </div>
+
+          {/* Colophon line: the fine print, set small and quiet. */}
+          <p className="mt-5 border-t border-slate-800/70 pt-4 font-mono text-[11px] leading-relaxed text-slate-600">
+            © 2026 BIDECEL — birth &amp; death certificate ledger, anchored on NEAR. Certificates
+            carry a salted hash on-chain; all personal data stays in a deletable off-chain record.
+          </p>
         </div>
       </footer>
 

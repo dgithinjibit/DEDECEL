@@ -3,6 +3,7 @@ import { timingSafeEqual } from 'node:crypto';
 import { CertStore, Domain, StoredCert } from './store.js';
 import { poseidonCommitment } from './poseidon.js';
 import { zkAvailable, proveCommitment, verifyProof } from './zk.js';
+import { encodeProofForNear, toHex } from './near-encoding.js';
 
 /*
   EXTERNAL VERIFICATION API  (prefix /verify/v1)
@@ -240,6 +241,33 @@ export function createVerifyRouter(store: CertStore): Router {
       }
       const { valid, commitment } = await verifyProof(proof, publicSignals as string[], expected);
       res.json({ valid, commitment, boundToCert: certId ? !!expected : false });
+    } catch (err) {
+      res.status(500).json({ error: (err as Error).message });
+    }
+  });
+
+  // Re-encode a snarkjs proof into the little-endian byte blobs the NEAR contract's `verify_proof`
+  // method expects (see backend/src/near-encoding.ts + the LE decision in the research doc). Returns
+  // hex args ready to pass straight to the contract call. This is the bridge between our off-chain
+  // proving and the on-chain verifier — the deployer/frontend calls this, then calls the contract.
+  router.post('/encode-for-chain', (req, res) => {
+    const { proof, publicSignals } = req.body ?? {};
+    // snarkjs proof shape: { pi_a: [x,y,z], pi_b: [[..],[..],[..]], pi_c: [x,y,z], ... }
+    if (!proof?.pi_a || !proof?.pi_b || !proof?.pi_c || !Array.isArray(publicSignals)) {
+      return res.status(400).json({ error: 'proof (pi_a/pi_b/pi_c) and publicSignals[] are required' });
+    }
+    try {
+      const enc = encodeProofForNear(
+        { pi_a: proof.pi_a, pi_b: proof.pi_b, pi_c: proof.pi_c },
+        publicSignals as string[]
+      );
+      res.json({
+        // Args for contract.verify_proof(neg_a, b, c, public_signals):
+        neg_a: toHex(enc.negA),
+        b: toHex(enc.b),
+        c: toHex(enc.c),
+        public_signals: publicSignals, // decimal strings; the contract parses them to LE32
+      });
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
     }

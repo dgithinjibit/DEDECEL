@@ -14,7 +14,8 @@
     "test:verify": "tsx src/verify.test.ts",
     "test:poseidon": "tsx src/poseidon.test.ts",
     "test:zk": "tsx src/zk.test.ts",
-    "test:all": "npm run test:hash && npm run test:store && npm run test:api && npm run test:auth && npm run test:verify && npm run test:poseidon && npm run test:zk",
+    "test:near-encoding": "tsx src/near-encoding.test.ts",
+    "test:all": "npm run test:hash && npm run test:store && npm run test:api && npm run test:auth && npm run test:verify && npm run test:poseidon && npm run test:zk && npm run test:near-encoding",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

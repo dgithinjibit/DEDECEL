@@ -40,7 +40,7 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={onResetGenesis}
-            className="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3.5 py-2 rounded-none text-xs font-semibold transition flex items-center gap-1.5"
+            className="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-1.5"
           >
             <span>Reset Ledger to Genesis State</span>
           </button>
@@ -70,7 +70,7 @@ export const SystemAuditor: React.FC<SystemAuditorProps> = ({
         {/* Security Tamper Simulation Button */}
         <button
           onClick={() => onSimulateTamper(1)}
-          className="bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40 px-4 py-2.5 rounded-none text-xs font-bold transition flex items-center gap-2 shrink-0"
+          className="bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40 px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 shrink-0"
           title="Corrupt Block #1 payload to test automatic Merkle root hash verification failure"
         >
           <span>Simulate Malicious Tamper Attack (Block #1)</span>

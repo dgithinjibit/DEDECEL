@@ -57,7 +57,7 @@ export const FhirInteropModal: React.FC<FhirInteropModalProps> = ({
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-none transition"
+            className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-lg transition"
           >
             Close
           </button>
@@ -82,14 +82,14 @@ export const FhirInteropModal: React.FC<FhirInteropModalProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={handleCopyJson}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-none text-xs font-semibold transition flex items-center gap-1.5"
+                className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5"
               >
                 <span>{copied ? 'Copied JSON' : 'Copy JSON'}</span>
               </button>
 
               <button
                 onClick={handleDownloadFhirFile}
-                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-1.5 rounded-none text-xs transition shadow-lg shadow-emerald-500/20 flex items-center gap-1.5"
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs transition shadow-lg shadow-emerald-500/20 flex items-center gap-1.5"
               >
                 <span>Export .fhir.json</span>
               </button>
@@ -104,19 +104,19 @@ export const FhirInteropModal: React.FC<FhirInteropModalProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleSimulateHisPush('Epic EHR System')}
-                className="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-2.5 py-1 rounded-none text-[11px] font-medium transition"
+                className="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-medium transition"
               >
                 Sync to Epic EHR
               </button>
               <button
                 onClick={() => handleSimulateHisPush('Cerner Millennium')}
-                className="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-2.5 py-1 rounded-none text-[11px] font-medium transition"
+                className="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-medium transition"
               >
                 Sync to Cerner
               </button>
               <button
                 onClick={() => handleSimulateHisPush('OpenMRS Global')}
-                className="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-2.5 py-1 rounded-none text-[11px] font-medium transition"
+                className="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-medium transition"
               >
                 Sync to OpenMRS
               </button>

@@ -65,7 +65,7 @@ export const NetworkBandwidthBar: React.FC<NetworkBandwidthBarProps> = ({
             <button
               onClick={onTriggerSync}
               disabled={networkSpeed === 'OFFLINE' || isSyncing}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-none font-medium text-xs shadow-sm transition ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-medium text-xs shadow-sm transition ${
                 networkSpeed === 'OFFLINE'
                   ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                   : isSyncing

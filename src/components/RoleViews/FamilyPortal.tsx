@@ -91,7 +91,7 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
 
         <button
           onClick={() => setShowKeyShardModal(true)}
-          className="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 px-4 py-2 rounded-none text-xs font-semibold transition flex items-center gap-2"
+          className="bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 px-4 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-2"
         >
           <span>Key Recovery Escrow (Shamir Shards)</span>
         </button>
@@ -114,7 +114,7 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
           <button
             type="submit"
             disabled={isSearching}
-            className="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-400 disabled:opacity-80 text-slate-950 font-bold px-6 py-2.5 rounded-none text-xs transition shadow-lg shadow-cyan-500/20 shrink-0 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-400 disabled:opacity-80 text-slate-950 font-bold px-6 py-2.5 rounded-lg text-xs transition shadow-lg shadow-cyan-500/20 shrink-0 flex items-center justify-center gap-2"
           >
             {isSearching ? (
               <span>Locating Record…</span>
@@ -132,7 +132,7 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
               key={c.id}
               disabled={isSearching}
               onClick={() => { setSearchQuery(c.id); executeFamilySearch(c.id); }}
-              className="bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-cyan-300 px-2.5 py-1 rounded-none font-mono text-[11px] border border-slate-700 transition"
+              className="bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-cyan-300 px-2.5 py-1 rounded-lg font-mono text-[11px] border border-slate-700 transition"
             >
               {c.id} ({c.firstName ? [c.firstName, c.secondName, c.lastName].filter(Boolean).join(' ') : c.deceasedName})
             </button>
@@ -174,7 +174,7 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
 
             <button
               onClick={() => onOpenPdfModal(foundCert)}
-              className="bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-bold px-5 py-2.5 rounded-none text-xs transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2"
+              className="bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-xs transition shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2"
             >
               <span>Download Official Sealed Certificate (PDF)</span>
             </button>
@@ -240,7 +240,7 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
               />
               <button
                 type="submit"
-                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-none text-xs transition flex items-center justify-center gap-1.5 shrink-0"
+                className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition flex items-center justify-center gap-1.5 shrink-0"
               >
                 <span>Issue Temporal ZK Access Key</span>
               </button>
@@ -300,7 +300,7 @@ export const FamilyPortal: React.FC<FamilyPortalProps> = ({
 
               <button
                 onClick={handleRecoverKeyShard}
-                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-none text-xs transition"
+                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 rounded-lg text-xs transition"
               >
                 Re-synthesize Access Key
               </button>

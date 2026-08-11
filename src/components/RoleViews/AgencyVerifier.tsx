@@ -129,7 +129,7 @@ export const AgencyVerifier: React.FC<AgencyVerifierProps> = ({
         <button
           onClick={handleSimulateQrScan}
           disabled={isScanning}
-          className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2.5 rounded-none text-xs transition shadow-lg shadow-cyan-500/20 flex items-center gap-2"
+          className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-xs transition shadow-lg shadow-cyan-500/20 flex items-center gap-2"
         >
           <span>{isScanning ? 'Scanning QR Code…' : 'Simulate Camera QR Scan'}</span>
         </button>
@@ -151,7 +151,7 @@ export const AgencyVerifier: React.FC<AgencyVerifierProps> = ({
           </div>
           <button
             type="submit"
-            className="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-6 py-2.5 rounded-none text-xs transition shrink-0"
+            className="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-6 py-2.5 rounded-lg text-xs transition shrink-0"
           >
             Verify On-Chain State
           </button>

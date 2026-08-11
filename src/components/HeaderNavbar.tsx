@@ -122,7 +122,7 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
           <div className="hidden md:flex items-center gap-2">
             <button
               onClick={onOpenExplorer}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition"
               title="Inspect Blockchain & Smart Contract Execution"
             >
               <span>Block Explorer</span>
@@ -130,7 +130,7 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
 
             <button
               onClick={onOpenFhir}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition"
               title="Hospital HIS / HL7 FHIR Interoperability Bridge"
             >
               <span>FHIR / HIS Interop</span>
@@ -138,7 +138,7 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
 
             <button
               onClick={onOpenEdgeCases}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-none bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-medium border border-amber-500/30 transition animate-pulse"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-medium border border-amber-500/30 transition animate-pulse"
               title="Edge Cases Grill & Decision Matrix"
             >
               <span>Edge Cases Grill</span>
