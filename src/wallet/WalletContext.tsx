@@ -35,6 +35,14 @@ export interface WalletState {
   isConnected: boolean;
   /** True once the account has been cryptographically verified by the backend (real login). */
   isAuthenticated: boolean;
+  /**
+   * DEMO MODE (judges / quick tours). True when the visitor tapped "Explore the demo" to skip the
+   * wallet entirely. This is DELIBERATELY separate from `isAuthenticated` — it is NOT a login and
+   * grants no real session token, so protected on-chain / backend actions still require a real
+   * wallet. The app gate opens on `isAuthenticated || isDemo`, but anything that writes to NEAR or
+   * the backend must check `isAuthenticated` (not this) so demo users can look, not tamper.
+   */
+  isDemo: boolean;
   /** The connected NEAR account id, e.g. "alice.testnet", or null when logged out. */
   accountId: string | null;
   /** True while a connect / sign-in is in flight (show a spinner). */
@@ -51,11 +59,19 @@ export interface WalletState {
    * gets the popup blocked ("Popup window blocked"). Only meaningful in real-wallet mode.
    */
   signIn: () => Promise<void>;
-  /** Log out. */
+  /**
+   * Enter DEMO mode: skip the wallet and open the dashboard read-only. For judges/reviewers who
+   * don't want to set up a testnet wallet just to see the idea. Does not touch NEAR or the backend.
+   */
+  enterDemo: () => void;
+  /** Log out (also leaves demo mode). */
   disconnect: () => void;
 }
 
-const TOKEN_KEY = 'dedecel_session_token_v1';
+/** A clearly-fake account label so demo mode is never mistaken for a real signed-in account. */
+const DEMO_ACCOUNT_ID = 'demo-guest.bidecel';
+
+const TOKEN_KEY = 'bidecel_session_token_v1';
 const NETWORK = (import.meta.env.VITE_NEAR_NETWORK as 'testnet' | 'mainnet') || 'testnet';
 const CONTRACT_ID = import.meta.env.VITE_NEAR_CONTRACT_ID || '';
 
@@ -65,6 +81,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [accountId, setAccountId] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
 
@@ -120,11 +137,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           // WalletConnect needs a project id (free from cloud.walletconnect.com). Harmless
           // placeholder in dev; set VITE_WALLETCONNECT_PROJECT_ID for real mobile linking.
           setupWalletConnect({
-            projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || 'dedecel-dev',
+            projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || 'bidecel-dev',
             metadata: {
-              name: 'DEDECEL',
+              name: 'BIDECEL',
               description: 'Decentralized Birth & Death Certificate Ledger',
-              url: 'https://dedecel.vercel.app',
+              url: 'https://bidecel.vercel.app',
               icons: [],
             },
           }),
@@ -263,8 +280,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     modalRef.current.show();
   };
 
+  /**
+   * Enter demo mode — no wallet, no signature, no session token. Just flips a flag and sets a
+   * clearly-fake account label so the gate opens and reviewers land on the dashboard. Real writes
+   * still require `isAuthenticated`, which demo does NOT set.
+   */
+  const enterDemo = () => {
+    setAuthError(null);
+    setIsDemo(true);
+    setAccountId(DEMO_ACCOUNT_ID);
+  };
+
   const disconnect = () => {
     authInFlightFor.current = null;
+    setIsDemo(false);
     setIsAuthenticated(false);
     setSessionToken(null);
     try {
@@ -287,12 +316,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     isConnected: accountId !== null,
     // "Logged in" requires a backend-verified signature — connecting alone is never enough.
     isAuthenticated,
+    isDemo,
     accountId,
     isConnecting,
     authError,
     sessionToken,
     connect,
     signIn: authenticate,
+    enterDemo,
     disconnect,
   };
 

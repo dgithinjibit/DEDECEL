@@ -44,7 +44,7 @@ export function createV1Router(store: CertStore): Router {
   router.get('/health', (_req, res) => {
     res.json({
       status: 'ok',
-      system: 'DEDECEL Vital Records Ledger',
+      system: 'BIDECEL Vital Records Ledger',
       version: '2.0.0',
       blockHeight,
       store: store.backendName(),

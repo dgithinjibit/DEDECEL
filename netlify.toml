@@ -1,5 +1,5 @@
-# Netlify config for the DEDECEL static frontend (Vite single-page app).
-# Deploy: connect this repo in Netlify and set the base directory to "DEDECEL/".
+# Netlify config for the BIDECEL static frontend (Vite single-page app).
+# Deploy: connect this repo in Netlify and set the base directory to "BIDECEL/".
 # At build time, set the env var VITE_USE_REAL_BACKEND=true and VITE_API_BASE_URL to your
 # backend's URL (see .env.example / HOW-IT-FITS.md).
 

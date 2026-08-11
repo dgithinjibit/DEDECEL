@@ -1,9 +1,9 @@
 [package]
-name = "dedecel-rust-node"
+name = "bidecel-rust-node"
 version = "0.1.0"
 edition = "2021"
-authors = ["DEDECEL Consortium <tech@dedecel.gov>"]
-description = "High-performance Rust Node for Oracle Validation & Consensus in DEDECEL Death Certificate Ledger"
+authors = ["BIDECEL Consortium <tech@bidecel.gov>"]
+description = "High-performance Rust Node for Oracle Validation & Consensus in BIDECEL Death Certificate Ledger"
 
 [dependencies]
 tokio = { version = "1.35", features = ["full"] }

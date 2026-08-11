@@ -1,5 +1,5 @@
 {
-  "name": "dedecel-backend",
+  "name": "bidecel-backend",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -13,7 +13,8 @@
     "test:auth": "tsx src/auth.test.ts",
     "test:verify": "tsx src/verify.test.ts",
     "test:poseidon": "tsx src/poseidon.test.ts",
-    "test:all": "npm run test:hash && npm run test:store && npm run test:api && npm run test:auth && npm run test:verify && npm run test:poseidon",
+    "test:zk": "tsx src/zk.test.ts",
+    "test:all": "npm run test:hash && npm run test:store && npm run test:api && npm run test:auth && npm run test:verify && npm run test:poseidon && npm run test:zk",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
@@ -27,6 +28,7 @@
     "express": "^4.21.2",
     "near-api-js": "^5.1.1",
     "poseidon-lite": "^0.3.0",
+    "snarkjs": "^0.7.6",
     "tsx": "^4.21.0"
   },
   "devDependencies": {

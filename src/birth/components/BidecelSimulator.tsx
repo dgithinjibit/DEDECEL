@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { BirthRecord, DebicelQueryResult } from '../types';
 import { apiUrl, apiBaseConfigured } from '../../services/apiBase';
 
-interface DedecelSimulatorProps {
+interface BidecelSimulatorProps {
   records: BirthRecord[];
 }
 
-export const DedecelSimulator: React.FC<DedecelSimulatorProps> = ({ records }) => {
+export const BidecelSimulator: React.FC<BidecelSimulatorProps> = ({ records }) => {
   const [nationalId, setNationalId] = useState('NAT-88392019');
   const [queryResult, setQueryResult] = useState<DebicelQueryResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);

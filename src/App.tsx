@@ -35,9 +35,9 @@ import { BirthApp } from './birth/BirthApp';
 type CertDomain = 'DEATH' | 'BIRTH';
 
 export default function App() {
-  const { isAuthenticated } = useWallet();
+  const { isAuthenticated, isDemo } = useWallet();
 
-  // Domain switch (Death = original DEDECEL; Birth = folded-in DeBiCeL, ported in Phase 1.3).
+  // Domain switch (Death = original BIDECEL; Birth = folded-in DeBiCeL, ported in Phase 1.3).
   const [domain, setDomain] = useState<CertDomain>('DEATH');
 
   // App-shell layout state: the mobile drawer (open/closed) and the desktop rail (collapsed?).
@@ -242,7 +242,9 @@ export default function App() {
 
   // Wallet gate: until the wallet is connected AND verified (real signature), show only the
   // login screen. Merely connecting is not enough — the backend must confirm account ownership.
-  if (!isAuthenticated) {
+  // Demo mode (isDemo) also opens the gate for read-only reviewers who skip the wallet; real
+  // on-chain / backend writes still require isAuthenticated, so demo users can look, not tamper.
+  if (!isAuthenticated && !isDemo) {
     return <WalletLogin />;
   }
 
@@ -407,7 +409,7 @@ export default function App() {
       {/* Footer */}
       <footer className="border-t border-slate-800 bg-[#28292e] py-6 text-center text-xs text-slate-300">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© 2026 DEDECEL - Decentralized Death Certificate Ledger. Built on Immutable Smart Contract Infrastructure.</p>
+          <p>© 2026 BIDECEL - Decentralized Death Certificate Ledger. Built on Immutable Smart Contract Infrastructure.</p>
           <div className="flex items-center gap-3">
             <button onClick={() => setShowExplorerModal(true)} className="hover:text-cyan-400">Block Explorer</button>
             <span>•</span>

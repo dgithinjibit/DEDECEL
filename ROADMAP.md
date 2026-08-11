@@ -1,6 +1,6 @@
-# DEDECEL + DeBiCeL — Project Roadmap
+# BIDECEL + DeBiCeL — Project Roadmap
 
-> **One-line goal:** Merge DeBiCeL (birth certs) into DEDECEL (death certs) as a single app, put a
+> **One-line goal:** Merge DeBiCeL (birth certs) into BIDECEL (death certs) as a single app, put a
 > **real NEAR backend** under it (hash-on-chain, PII off-chain), get **HOT Wallet** login working,
 > and host it for **$0**. Built by a beginner, taught step by step.
 
@@ -28,7 +28,7 @@ everything below:
 
 | Decision | Choice |
 |---|---|
-| Merge shape | **One app** — DeBiCeL folded into DEDECEL as a "Birth" section. DEDECEL is primary. |
+| Merge shape | **One app** — DeBiCeL folded into BIDECEL as a "Birth" section. BIDECEL is primary. |
 | Recolor | **Whole-app theme now** — replace all bluish accents (`cyan-*`, `indigo-*`, `blue-*`) with **`#BA8C63`** (warm tan/bronze) via a Tailwind v4 theme token. |
 | Auth | **Wallet-connect only** (HOT Wallet / NEAR) — no passwords for now. |
 | Chain | **NEAR testnet** first (free test tokens), deploy to mainnet unchanged later. |
@@ -61,14 +61,14 @@ only ever calls the interface, so Track A can build against the mock while Track
 Track A. Goal: one running app, recolored, with a wallet-connect login page. No real chain yet.
 All five sub-steps complete; `tsc --noEmit` and `vite build` both pass. See sub-steps below (all ✅).
 
-1. **Scaffold the merged app.** Keep DEDECEL as the base app. Add a top-level section concept:
+1. **Scaffold the merged app.** Keep BIDECEL as the base app. Add a top-level section concept:
    `Death` (existing) and `Birth` (new). Decide the navigation surface (extend the existing
-   state-based view switcher in `DEDECEL/src/App.tsx` with a `domain: 'DEATH' | 'BIRTH'` axis).
+   state-based view switcher in `BIDECEL/src/App.tsx` with a `domain: 'DEATH' | 'BIRTH'` axis).
 2. **Whole-app recolor to `#BA8C63`.** Tailwind v4, no config file today — define a theme token in
-   `DEDECEL/src/index.css` (`@theme { --color-brand-*: … }`) and replace bluish accent classes
+   `BIDECEL/src/index.css` (`@theme { --color-brand-*: … }`) and replace bluish accent classes
    (`cyan-*`, `indigo-*`) app-wide. This is a large but mechanical find/replace across JSX.
 3. **Port DeBiCeL's birth components** into the merged app under a `Birth/` area: DoctorEntryPortal,
-   RegistrarPortal (birth), FamilyPortal (birth), AuditorPortal, DedecelSimulator, the certificate &
+   RegistrarPortal (birth), FamilyPortal (birth), AuditorPortal, BidecelSimulator, the certificate &
    ZK modals, velocity analytics. Recolor them to `#BA8C63` too (they use `blue-*`/`slate-*`).
 4. **Wallet-connect login/sign-up page.** New route/view: "Connect Wallet" (HOT Wallet / NEAR). For
    Phase 1 this can be UI + a stub connector so the two tracks proceed; real wallet wiring lands in
@@ -98,7 +98,7 @@ needs the NEAR CLI + a funded testnet account (see `contract/DEPLOY.md`).
 1. ✅ Rust contract in `contract/src/lib.rs`: `LookupMap<String,String>` of certId→hash, methods
    `new(owner)` / `anchor(cert_id,hash)` (owner-only, no overwrite) / `verify` / `get_hash` /
    `get_owner`. 5 unit tests pass; release wasm builds (~192 KB) at
-   `contract/target/wasm32-unknown-unknown/release/dedecel_anchor.wasm`. **No PII in state.**
+   `contract/target/wasm32-unknown-unknown/release/bidecel_anchor.wasm`. **No PII in state.**
 2. ⬜ Deploy to **NEAR testnet** (manual): follow `contract/DEPLOY.md` — install `near` CLI, create
    + faucet-fund a `.testnet` account, `deploy … with-init-call new`, smoke-test anchor/verify.
 3. ✅ Wire **HOT Wallet** (NEAR wallet-selector) into the Phase 1 login page: `WalletContext.tsx`
@@ -112,7 +112,7 @@ needs the NEAR CLI + a funded testnet account (see `contract/DEPLOY.md`).
    `NEAR_NETWORK / NEAR_CONTRACT_ID / NEAR_SIGNER_ACCOUNT_ID / NEAR_SIGNER_PRIVATE_KEY`.
 
 **To finish Phase 3:** run the deploy in `contract/DEPLOY.md`, then set the `NEAR_*` vars in
-`backend/.env` and `VITE_USE_REAL_WALLET=true` + `VITE_NEAR_CONTRACT_ID` in `DEDECEL/.env`.
+`backend/.env` and `VITE_USE_REAL_WALLET=true` + `VITE_NEAR_CONTRACT_ID` in `BIDECEL/.env`.
 
 ### Phase 4 — Integration, verification, polish  ✅ DONE (2026-08-10)
 Death flow rewired to the real backend + automated tests added. All green: contract 5/5, backend
@@ -138,12 +138,12 @@ set, anchoring returns a `local:` placeholder (`onChain:false`). Everything else
 ### Phase 5 — $0 hosting & docs  ✅ DONE (2026-08-10)
 All hosting config + beginner docs added; frontend tsc+build (incl. a prod-env build that bakes the
 backend URL into the bundle) and backend 51/51 tests green.
-1. ✅ Static frontend host config: `DEDECEL/vercel.json` + `DEDECEL/netlify.toml` (build cmd,
+1. ✅ Static frontend host config: `BIDECEL/vercel.json` + `BIDECEL/netlify.toml` (build cmd,
    publish `dist`, SPA fallback rewrite). Off-chain API host config: `backend/render.yaml` (free web
    service, healthCheck `/v2/health`, env var stubs) + `backend/Procfile`. Backend now binds
    `process.env.PORT` (host-injected) and has an env-driven CORS allowlist (`CORS_ORIGINS`).
-   Prod/dev API split: new `DEDECEL/src/services/apiBase.ts` `apiUrl()` helper + `VITE_API_BASE_URL`;
-   every `/api/v1` + `/v2` fetch (registry, deathRegistry, BirthApp, DedecelSimulator) routed through
+   Prod/dev API split: new `BIDECEL/src/services/apiBase.ts` `apiUrl()` helper + `VITE_API_BASE_URL`;
+   every `/api/v1` + `/v2` fetch (registry, deathRegistry, BirthApp, BidecelSimulator) routed through
    it — empty in dev (Vite proxy), full backend URL in prod. `tsx` moved to backend deps so a
    dev-dep-pruning host can still `npm start`. Both `.env.example`s updated.
 2. ✅ Contract unchanged — stays on NEAR (testnet free; same wasm → mainnet later). Deploy still the

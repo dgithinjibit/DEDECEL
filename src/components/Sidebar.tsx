@@ -129,7 +129,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               DC
             </div>
             {!collapsed && (
-              <span className="font-bold text-base tracking-tight text-slate-100">DEDECEL</span>
+              <span className="font-bold text-base tracking-tight text-slate-100">BIDECEL</span>
             )}
           </button>
 

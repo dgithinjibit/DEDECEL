@@ -1,4 +1,4 @@
-# DEDECEL — Deploy it all for $0
+# BIDECEL — Deploy it all for $0
 
 This guides you from "it runs on my laptop" to "it's live on the internet, for free", step by step.
 New to hosting? That's fine — every step says exactly what to click/type and why.
@@ -16,8 +16,8 @@ Read **[HOW-IT-FITS.md](./HOW-IT-FITS.md)** first if you haven't; it explains th
 
 You'll deploy three things, in this order (each one's URL feeds the next):
 
-1. **Backend API** → Render (free web service). Gives you a URL like `https://dedecel-api.onrender.com`.
-2. **Frontend website** → Vercel or Netlify (free static hosting). Gives you `https://dedecel.vercel.app`.
+1. **Backend API** → Render (free web service). Gives you a URL like `https://bidecel-api.onrender.com`.
+2. **Frontend website** → Vercel or Netlify (free static hosting). Gives you `https://bidecel.vercel.app`.
 3. **(Optional) NEAR contract** → NEAR testnet, so anchoring is truly on-chain. See
    `contract/DEPLOY.md`. Skip this and anchoring still works in "disabled" mode (a `local:` id).
 
@@ -36,7 +36,7 @@ npm install
 npm start                     # -> http://localhost:4000  (in-memory store, NEAR disabled)
 
 # Terminal 2 — frontend
-cd DEDECEL
+cd BIDECEL
 npm install
 npm run dev                   # -> http://localhost:3000, proxies /api & /v2 to :4000
 ```
@@ -53,7 +53,7 @@ The repo already includes `backend/render.yaml` (a "blueprint" that tells Render
 
 1. Go to <https://render.com>, sign up (free), and connect your GitHub.
 2. **New +** → **Blueprint** → pick this repo. Render reads `backend/render.yaml` and proposes a
-   web service named `dedecel-backend`.
+   web service named `bidecel-backend`.
 3. It will ask you to fill the secrets marked `sync: false`. At minimum set:
    - **`DEDECEL_HASH_PEPPER`** — your long random string (the SAME one forever; changing it
      invalidates every existing hash).
@@ -62,7 +62,7 @@ The repo already includes `backend/render.yaml` (a "blueprint" that tells Render
      SQL editor, then copy the Project URL + **service_role** key).
    - Leave the `NEAR_*` empty unless you've deployed the contract (step 3).
    - `CORS_ORIGINS` — leave empty for now; you'll set it in step 2 once you know the frontend URL.
-4. Click **Apply / Deploy**. When it goes live, note the URL, e.g. `https://dedecel-api.onrender.com`.
+4. Click **Apply / Deploy**. When it goes live, note the URL, e.g. `https://bidecel-api.onrender.com`.
 5. Test it: open `https://<your-backend>/v2/health` in a browser — you should see a JSON blob with
    `"status":"ok"`.
 
@@ -70,16 +70,16 @@ The repo already includes `backend/render.yaml` (a "blueprint" that tells Render
 
 ## 2. Deploy the FRONTEND to Vercel (free)
 
-The repo includes `DEDECEL/vercel.json` (and `DEDECEL/netlify.toml` if you prefer Netlify).
+The repo includes `BIDECEL/vercel.json` (and `BIDECEL/netlify.toml` if you prefer Netlify).
 
 **Vercel:**
 1. Go to <https://vercel.com>, sign up, **Add New… → Project**, import this repo.
-2. **Root Directory:** set it to `DEDECEL`. (Vercel then auto-detects Vite from `vercel.json`.)
+2. **Root Directory:** set it to `BIDECEL`. (Vercel then auto-detects Vite from `vercel.json`.)
 3. **Environment Variables** (Project Settings → Environment Variables). These are read at *build*
    time, so add them before the first build:
    ```
    VITE_USE_REAL_BACKEND = true
-   VITE_API_BASE_URL     = https://dedecel-api.onrender.com     # your step-1 backend URL, no trailing slash
+   VITE_API_BASE_URL     = https://bidecel-api.onrender.com     # your step-1 backend URL, no trailing slash
    ```
    Optional (only if you did step 3 / real wallet):
    ```
@@ -87,15 +87,15 @@ The repo includes `DEDECEL/vercel.json` (and `DEDECEL/netlify.toml` if you prefe
    VITE_NEAR_NETWORK     = testnet
    VITE_NEAR_CONTRACT_ID = your-account.testnet
    ```
-4. **Deploy.** You'll get a URL like `https://dedecel.vercel.app`.
+4. **Deploy.** You'll get a URL like `https://bidecel.vercel.app`.
 
-**Netlify** is equivalent: import the repo, set **Base directory** to `DEDECEL/`, and add the same
+**Netlify** is equivalent: import the repo, set **Base directory** to `BIDECEL/`, and add the same
 environment variables. `netlify.toml` supplies the build command, publish dir, and SPA fallback.
 
 ### Now close the CORS loop
 Back in Render, set the backend's **`CORS_ORIGINS`** to your frontend URL and redeploy:
 ```
-CORS_ORIGINS = https://dedecel.vercel.app
+CORS_ORIGINS = https://bidecel.vercel.app
 ```
 This tells the API to accept requests from your site (and reject others). Without it the browser
 will block the frontend's calls with a CORS error.

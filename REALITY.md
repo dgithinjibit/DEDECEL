@@ -1,13 +1,13 @@
-# 🏛️ DEDECEL: Decentralized Death Certificate Ledger
+# 🏛️ BIDECEL: Decentralized Death Certificate Ledger
 ## Executive Board Briefing & Ideation Architecture Document
 
 ---
 
 ## 🎯 Executive Overview & Pitch Strategy
 
-**DEDECEL** (Decentralized Death Certificate Ledger) is a enterprise-grade, B2B Consortium Blockchain application built to solve the **multi-billion-dollar global crisis of death certificate fraud, ghost identity theft, probate court delays, and cross-border vital statistics verification**.
+**BIDECEL** (Decentralized Death Certificate Ledger) is a enterprise-grade, B2B Consortium Blockchain application built to solve the **multi-billion-dollar global crisis of death certificate fraud, ghost identity theft, probate court delays, and cross-border vital statistics verification**.
 
-When presented to a board of directors, government ministers, or venture investors, DEDECEL demonstrates how **cryptographic proof, multi-signature oracle consensus, and zero-knowledge privacy engine** transform a sluggish, paper-and-siloed state apparatus into an automated, tamper-proof national vital records ledger.
+When presented to a board of directors, government ministers, or venture investors, BIDECEL demonstrates how **cryptographic proof, multi-signature oracle consensus, and zero-knowledge privacy engine** transform a sluggish, paper-and-siloed state apparatus into an automated, tamper-proof national vital records ledger.
 
 ---
 
@@ -22,12 +22,12 @@ When presented to a board of directors, government ministers, or venture investo
 
 ---
 
-## 💡 How DEDECEL Overcomes the 4 Brutal Challenges
+## 💡 How BIDECEL Overcomes the 4 Brutal Challenges
 
 ### 1. Solving the "Oracle Problem" (Life and Death Risk)
 * **The Challenge**: Blockchains cannot observe real-world biological death. Bribing a single corrupt doctor could result in declaring a living person legally "dead" on-chain.
-* **The DEDECEL Solution**:
-  * **Multi-Sig Medical Consortium**: DEDECEL rejects single-oracle inputs. A death record requires a 3-of-4 multi-signature threshold:
+* **The BIDECEL Solution**:
+  * **Multi-Sig Medical Consortium**: BIDECEL rejects single-oracle inputs. A death record requires a 3-of-4 multi-signature threshold:
     1. Licensed Medical Officer (verified via ECDSA key bound to their national medical board ID).
     2. Hospital Facility Node (authenticated via hardware HSM).
     3. Civil Registrar Authority Node.
@@ -37,20 +37,20 @@ When presented to a board of directors, government ministers, or venture investo
 
 ### 2. Overcoming Centralized State Monopoly
 * **The Challenge**: Governments will not abandon their centralized systems (e.g., eCitizen in Kenya, NHS in the UK).
-* **The DEDECEL Solution**:
-  * **B2B Consortium Architecture**: DEDECEL does not attempt to replace the government. Instead, it sits as a **side-car cryptographic consensus ledger** running on nodes operated by:
+* **The BIDECEL Solution**:
+  * **B2B Consortium Architecture**: BIDECEL does not attempt to replace the government. Instead, it sits as a **side-car cryptographic consensus ledger** running on nodes operated by:
     * Ministry of Health / Civil Registration Bureau
     * Insurance Regulatory Authority
     * Commercial Banking Consortiums
     * National Referral Hospitals
-  * **Zero-Friction API Integration**: DEDECEL provides native **HL7 FHIR R4** JSON endpoints and RESTful API hooks that seamlessly plug into existing government databases.
+  * **Zero-Friction API Integration**: BIDECEL provides native **HL7 FHIR R4** JSON endpoints and RESTful API hooks that seamlessly plug into existing government databases.
 
 ---
 
 ### 3. Resolving GDPR & HIPAA Privacy Conflicts via Cairo ZK-STARKs
 * **The Challenge**: Blockchain immutability violates GDPR's "Right to be Forgotten" and HIPAA patient confidentiality.
-* **The DEDECEL Solution**:
-  * **Zero-Knowledge Proof Engine**: DEDECEL **NEVER** writes unencrypted names, national IDs, or ICD-10 medical diagnostics to the blockchain.
+* **The BIDECEL Solution**:
+  * **Zero-Knowledge Proof Engine**: BIDECEL **NEVER** writes unencrypted names, national IDs, or ICD-10 medical diagnostics to the blockchain.
   * **Cairo ZK Smart Contracts (`/experimental/cairo-zk`)**: The Cairo smart contract verifies a ZK-STARK proof that proves:
     $$\text{Proof} \implies \text{Valid Physician Signature} \land \text{Authentic Hospital Hash} \land \text{Deceased Status}$$
   * Verifiers (insurance agencies, banks) verify the cryptographic proof without accessing raw PII or clinical cause-of-death notes.
@@ -59,7 +59,7 @@ When presented to a board of directors, government ministers, or venture investo
 
 ### 4. Navigating the "Human Tragedy" & "Code is Law" Conflict
 * **The Challenge**: Legal disputes, contested wills, and delayed forensic autopsies require judicial pauses that automated smart contracts cannot accommodate.
-* **The DEDECEL Solution**:
+* **The BIDECEL Solution**:
   * **Multi-Stage Record Lifecycle**:
     1. `DRAFT_OFFLINE` $\to$ 2. `SIGNED_MEDICAL` $\to$ 3. `PENDING_REGISTRAR` $\to$ 4. `SEALED_ONCHAIN`
   * **Judicial Revocation Protocol**: Authorized Civil Registrars and System Auditors hold threshold multi-sig keys capable of issuing `REVOKE` or `AMEND` transactions on-chain. Previous versions remain in the block history, maintaining an auditable trail while reflecting active legal status.
@@ -68,11 +68,11 @@ When presented to a board of directors, government ministers, or venture investo
 
 ## 🛠️ Full-Stack Technology Architecture
 
-DEDECEL is architected across three synchronized layers:
+BIDECEL is architected across three synchronized layers:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        DEDECEL FRONTEND PLATFORM                       │
+│                        BIDECEL FRONTEND PLATFORM                       │
 │  React 18 • Vite • Tailwind CSS • Offline-First PWA (IndexedDB Queue)   │
 │  HL7 FHIR R4 Interop • PDF Security Generator • Secp256k1 Cryptography │
 └───────────────────────────────────┬────────────────────────────────────┘

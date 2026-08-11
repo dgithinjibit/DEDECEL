@@ -1,4 +1,4 @@
-# Deploying the DEDECEL anchor contract to NEAR testnet
+# Deploying the BIDECEL anchor contract to NEAR testnet
 
 This is the **on-chain half** of the project: a tiny program (`src/lib.rs`) that stores
 `certificate_id -> fingerprint` on the NEAR blockchain and nothing else. This guide takes you
@@ -14,7 +14,7 @@ step by step, assuming no prior blockchain experience.
 
 - `src/lib.rs` — the contract source (well-commented; read it once).
 - `Cargo.toml` — the Rust manifest.
-- A compiled artifact at `target/wasm32-unknown-unknown/release/dedecel_anchor.wasm`
+- A compiled artifact at `target/wasm32-unknown-unknown/release/bidecel_anchor.wasm`
   (~192 KB). This `.wasm` file is the thing that gets uploaded to the chain.
 
 If the `.wasm` is missing, rebuild it (step 2).
@@ -53,7 +53,7 @@ cd contract
 cargo build --target wasm32-unknown-unknown --release
 ```
 
-The artifact lands at `target/wasm32-unknown-unknown/release/dedecel_anchor.wasm`.
+The artifact lands at `target/wasm32-unknown-unknown/release/bidecel_anchor.wasm`.
 
 > `cargo test` (no target flag) runs the 5 unit tests against a fake blockchain — do this
 > anytime to check the logic without touching the network.
@@ -92,7 +92,7 @@ the empty table. Doing both together avoids a window where the contract exists b
 
 ```bash
 near contract deploy registry-demo.testnet \
-  use-file target/wasm32-unknown-unknown/release/dedecel_anchor.wasm \
+  use-file target/wasm32-unknown-unknown/release/bidecel_anchor.wasm \
   with-init-call new json-args '{"owner": "registry-demo.testnet"}' \
   prepaid-gas '100.0 Tgas' attached-deposit '0 NEAR' \
   network-config testnet sign-with-keychain send

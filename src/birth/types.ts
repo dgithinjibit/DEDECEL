@@ -125,4 +125,4 @@ export interface DebicelQueryResult {
   queriedAt: string;
 }
 
-export type DedecelQueryResult = DebicelQueryResult;
+export type BidecelQueryResult = DebicelQueryResult;

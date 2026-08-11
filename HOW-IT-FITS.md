@@ -1,4 +1,4 @@
-# DEDECEL — How it all fits together (a beginner's map)
+# BIDECEL — How it all fits together (a beginner's map)
 
 This project is a **digital birth & death certificate registry** with a twist: it uses a
 blockchain as a *tamper-proof notary*, while keeping all the private personal data in an ordinary,
@@ -38,14 +38,14 @@ forget them.
 ```
    ┌─────────────────────────┐        ┌──────────────────────────┐        ┌───────────────────┐
    │  FRONTEND (the website)  │  HTTP  │  BACKEND (the API)       │  RPC   │  NEAR CONTRACT    │
-   │  DEDECEL/                │ ─────► │  backend/                │ ─────► │  contract/        │
+   │  BIDECEL/                │ ─────► │  backend/                │ ─────► │  contract/        │
    │  React + Vite            │        │  Express + hashing       │        │  Rust "notary"    │
    │  runs in the browser     │ ◄───── │  owns the PII + salt     │ ◄───── │  stores id→hash   │
    └─────────────────────────┘        └──────────────────────────┘        └───────────────────┘
        what people see                  where secrets live                 the public proof
 ```
 
-1. **Frontend — `DEDECEL/`** (a React website).
+1. **Frontend — `BIDECEL/`** (a React website).
    The user interface: birth section, death section, wallet login, verifier, block explorer.
    It never touches the database or the chain directly — it only calls the backend's API. A small
    **service layer** (`src/services/registry.ts`) lets it run against either a fake in-browser
@@ -112,9 +112,9 @@ To actually deploy it all for **$0**, see **[DEPLOY.md](./DEPLOY.md)**.
 
 | Folder / file                    | What it is |
 |----------------------------------|------------|
-| `DEDECEL/`                       | The React frontend (the website users see). |
-| `DEDECEL/src/services/`          | The seam: `registry.ts`, `deathRegistry.ts`, `apiBase.ts`, the mock ledger. |
-| `DEDECEL/src/wallet/`            | Wallet login (real HOT Wallet or demo stub). |
+| `BIDECEL/`                       | The React frontend (the website users see). |
+| `BIDECEL/src/services/`          | The seam: `registry.ts`, `deathRegistry.ts`, `apiBase.ts`, the mock ledger. |
+| `BIDECEL/src/wallet/`            | Wallet login (real HOT Wallet or demo stub). |
 | `backend/`                       | The Express API: PII store + hashing + NEAR anchoring. |
 | `backend/schema.sql`             | The database tables (run against Supabase for real storage). |
 | `contract/`                      | The Rust NEAR contract + its own `DEPLOY.md`. |

@@ -31,7 +31,7 @@ import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypt
 import { verifySignature, verifyFullKeyBelongsToUser } from '@near-wallet-selector/core';
 
 /** The message the wallet shows the user when signing in. Human-readable on purpose. */
-const LOGIN_MESSAGE = 'Log in to DEDECEL';
+const LOGIN_MESSAGE = 'Log in to BIDECEL';
 
 /**
  * Whether to require the signing key be a FULL-ACCESS key (strict NEP-413).
@@ -142,9 +142,9 @@ export function verifyToken(token: string, nowMs: number): string | null {
 /**
  * The `recipient` bound into the signed payload. The wallet shows it to the user and it becomes
  * part of what they sign, so a signature for another app can't be replayed here. Set
- * AUTH_RECIPIENT to your app/contract id in production (e.g. "dedecel.testnet").
+ * AUTH_RECIPIENT to your app/contract id in production (e.g. "bidecel.testnet").
  */
-const RECIPIENT = process.env.AUTH_RECIPIENT || 'dedecel.testnet';
+const RECIPIENT = process.env.AUTH_RECIPIENT || 'bidecel.testnet';
 
 /** testnet | mainnet — must match the network the wallet signed on (for the on-chain key check). */
 const NETWORK_ID = (process.env.NEAR_NETWORK === 'mainnet' ? 'mainnet' : 'testnet') as

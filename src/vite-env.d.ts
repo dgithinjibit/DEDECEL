@@ -4,7 +4,7 @@ interface ImportMetaEnv {
   /** When "true", the app uses the real Phase 2 backend instead of the in-memory mock. */
   readonly VITE_USE_REAL_BACKEND?: string;
   /**
-   * Backend base URL for PRODUCTION (e.g. "https://dedecel-api.onrender.com"). Leave empty in
+   * Backend base URL for PRODUCTION (e.g. "https://bidecel-api.onrender.com"). Leave empty in
    * dev so relative paths hit the Vite proxy. See src/services/apiBase.ts.
    */
   readonly VITE_API_BASE_URL?: string;

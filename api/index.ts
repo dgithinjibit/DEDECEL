@@ -1,5 +1,5 @@
 /*
-  VERCEL SERVERLESS ENTRYPOINT for the DEDECEL backend.
+  VERCEL SERVERLESS ENTRYPOINT for the BIDECEL backend.
 
   On Vercel there is no long-running server that calls `app.listen()`. Instead, every matching
   request invokes THIS function, and Vercel hands us Node's raw (req, res). An Express `app` is

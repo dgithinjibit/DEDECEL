@@ -1,11 +1,11 @@
-# Render.com blueprint for the DEDECEL off-chain backend (free web service).
+# Render.com blueprint for the BIDECEL off-chain backend (free web service).
 # Deploy: in Render, "New +" -> "Blueprint" -> point at this repo. Render reads this file.
 # (Render's free tier sleeps after ~15 min idle and cold-starts on the next request — fine for
 #  a demo. The frontend's real-backend calls will just be slow on the first hit after a nap.)
 
 services:
   - type: web
-    name: dedecel-backend
+    name: bidecel-backend
     runtime: node
     plan: free
     rootDir: backend

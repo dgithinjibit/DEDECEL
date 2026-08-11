@@ -1,9 +1,9 @@
 import { Block, DeathCertificate, FacultyMember, RecordTransaction, UserRole } from '../types';
 import { CryptoEngine } from './cryptoEngine';
 
-const STORAGE_KEY_BLOCKS = 'dedecel_blockchain_blocks_v1';
-const STORAGE_KEY_CERTS = 'dedecel_blockchain_certs_v1';
-const STORAGE_KEY_FACULTY = 'dedecel_blockchain_faculty_v1';
+const STORAGE_KEY_BLOCKS = 'bidecel_blockchain_blocks_v1';
+const STORAGE_KEY_CERTS = 'bidecel_blockchain_certs_v1';
+const STORAGE_KEY_FACULTY = 'bidecel_blockchain_faculty_v1';
 
 export class BlockchainLedger {
   private blocks: Block[] = [];

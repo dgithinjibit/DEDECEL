@@ -8,7 +8,7 @@ import { useWallet } from '../wallet/WalletContext';
   The old horizontal navbar is gone; navigation now lives in the left Sidebar. This bar keeps
   only what belongs at the top of every screen:
 
-    - a big DEDECEL wordmark + slogan (the whole point of freeing the horizontal space)
+    - a big BIDECEL wordmark + slogan (the whole point of freeing the horizontal space)
     - the live network-speed status (with the offline queue count)
     - the connected wallet chip + Disconnect (read straight from useWallet())
     - a chain-integrity warning banner when the ledger was tampered with
@@ -35,7 +35,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onOpenSidebar,
 }) => {
   // Wallet chip reads directly from context — no props needed (avoids threading through App).
-  const { accountId, disconnect } = useWallet();
+  const { accountId, disconnect, isDemo } = useWallet();
 
   return (
     <header className="bg-[#28292e] border-b border-slate-700/80 text-white sticky top-0 z-30 shadow-lg">
@@ -65,7 +65,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           <div className="min-w-0">
             <h1 className="font-extrabold tracking-tight text-2xl sm:text-3xl leading-none truncate">
-              DEDECEL <span className="text-brand-400">Ledger</span>
+              BIDECEL <span className="text-brand-400">Ledger</span>
             </h1>
             <p className="hidden sm:block text-xs text-slate-400 mt-0.5 truncate">
               Decentralized Birth &amp; Death Certificate Ledger — verifiable on-chain
@@ -99,6 +99,13 @@ export const TopBar: React.FC<TopBarProps> = ({
             )}
           </div>
 
+          {/* Demo badge — makes it unmistakable this is a read-only tour, not a signed-in session. */}
+          {isDemo && (
+            <span className="inline-flex items-center text-[10px] font-bold tracking-wide uppercase text-brand-200 bg-brand-500/15 border border-brand-500/40 rounded-full px-2.5 py-1">
+              Demo
+            </span>
+          )}
+
           {/* Wallet chip */}
           <span className="hidden md:inline-flex items-center text-xs text-slate-300 bg-[#1f2024] border border-slate-700 rounded-full px-3 py-1 max-w-[180px] truncate">
             {accountId}
@@ -107,7 +114,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             onClick={disconnect}
             className="inline-flex items-center text-xs text-slate-300 hover:text-white border border-slate-700 hover:border-brand-500 rounded-full px-3 py-1 transition-colors"
           >
-            Disconnect
+            {isDemo ? 'Exit demo' : 'Disconnect'}
           </button>
         </div>
       </div>

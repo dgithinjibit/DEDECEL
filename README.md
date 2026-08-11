@@ -1,4 +1,4 @@
-# DEDECEL — Decentralized Death Certificate Ledger
+# BIDECEL — Decentralized Death Certificate Ledger
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg)](https://www.typescriptlang.org/)
@@ -7,7 +7,7 @@
 [![HL7 FHIR R4](https://img.shields.io/badge/Interoperability-HL7_FHIR_R4-orange.svg)](https://hl7.org/fhir/)
 [![Security: ZKP & AES-256](https://img.shields.io/badge/Security-ZKP_%26_AES--256-emerald.svg)](#)
 
-> **DEDECEL** (Decentralized Death Certificate Ledger) is a production-grade, multi-stakeholder vital statistics registry built on immutable blockchain smart contract architecture, Zero-Knowledge Proof (ZKP) privacy controls, and HL7 FHIR R4 healthcare interoperability.
+> **BIDECEL** (Decentralized Death Certificate Ledger) is a production-grade, multi-stakeholder vital statistics registry built on immutable blockchain smart contract architecture, Zero-Knowledge Proof (ZKP) privacy controls, and HL7 FHIR R4 healthcare interoperability.
 
 ---
 
@@ -19,7 +19,7 @@ Civil vital registration systems worldwide suffer from critical vulnerabilities:
 * **Forged Medical Reports**: Unaccredited individuals issue fake death reports without verifiable physician credentials.
 * **Rural Connectivity Gaps**: Health facilities in low-resource environments lack continuous connectivity to central databases.
 
-**DEDECEL** solves these challenges by deploying an immutable ledger anchored by Secp256k1 ECDSA physician signatures, state-level civil registrar seals, and real-time verification APIs for banks, insurers, and government agencies.
+**BIDECEL** solves these challenges by deploying an immutable ledger anchored by Secp256k1 ECDSA physician signatures, state-level civil registrar seals, and real-time verification APIs for banks, insurers, and government agencies.
 
 ---
 
@@ -27,7 +27,7 @@ Civil vital registration systems worldwide suffer from critical vulnerabilities:
 
 ```
 +-----------------------------------------------------------------------------------+
-|                                  DEDECEL SYSTEM ARCHITECTURE                      |
+|                                  BIDECEL SYSTEM ARCHITECTURE                      |
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
 |  [ Public Homepage & Verification Engine ]                                        |
@@ -105,8 +105,8 @@ Civil vital registration systems worldwide suffer from critical vulnerabilities:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/dedecel.git
-cd dedecel
+git clone https://github.com/your-username/bidecel.git
+cd bidecel
 
 # Install dependencies
 npm install
@@ -132,7 +132,7 @@ npm start
 
 ## ⚖️ Multi-Jurisdictional Regulatory Compliance
 
-DEDECEL supports configurable regulatory sovereignty modes:
+BIDECEL supports configurable regulatory sovereignty modes:
 * **KE PDPA (Kenya Data Protection Act 2019)**: Primary jurisdiction compliance with KMPDC physician credential validation.
 * **EU GDPR (General Data Protection Regulation)**: Right-to-be-forgotten handled via cryptographic erasure of off-chain key shards while preserving on-chain state hashes.
 * **US HIPAA (Health Insurance Portability and Accountability Act)**: Protected Health Information (PHI) encrypted with zero-trust access controls.

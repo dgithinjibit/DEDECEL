@@ -1,5 +1,5 @@
 // =============================================================================
-// DEDECEL anchor contract  —  the ON-CHAIN half of the project.
+// BIDECEL anchor contract  —  the ON-CHAIN half of the project.
 //
 // WHAT THIS IS (plain language):
 //   A tiny program that lives on the NEAR blockchain. Its ONLY job is to act as

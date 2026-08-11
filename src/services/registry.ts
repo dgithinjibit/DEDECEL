@@ -129,10 +129,10 @@ class PersistentMap<T> {
 
 class MockRegistry implements RegistryService {
   private anchored = new PersistentMap<{ hash: string; anchoredAt: string; domain: CertDomain }>(
-    'dedecel:mock:anchored',
+    'bidecel:mock:anchored',
   );
   private birthByNationalId = new PersistentMap<{ birthHash: string; registrationId: string }>(
-    'dedecel:mock:birthByNationalId',
+    'bidecel:mock:birthByNationalId',
   );
 
   async anchorHash(domain: CertDomain, certId: string, saltedHash: string): Promise<AnchorResult> {
@@ -246,7 +246,7 @@ export const realRegistry = new RealRegistry();
 
 /**
  * The registry the app imports. Selection:
- *   - Set VITE_USE_REAL_BACKEND=true (in DEDECEL/.env) to use the real backend.
+ *   - Set VITE_USE_REAL_BACKEND=true (in BIDECEL/.env) to use the real backend.
  *   - Otherwise the in-memory mock is used (safe default, needs no backend running).
  * Either way the UI code is identical — this is the parallel-work seam.
  */

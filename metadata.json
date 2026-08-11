@@ -1,5 +1,5 @@
 {
-  "name": "DEDECEL",
+  "name": "BIDECEL",
   "description": "Blockchain-backed immutable death record management with smart contracts, encrypted off-chain IPFS storage, FHIR HL7 interoperability, offline queueing, and role-based access for medical officers, registrars, and grieving families.",
   "requestFramePermissions": ["camera"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

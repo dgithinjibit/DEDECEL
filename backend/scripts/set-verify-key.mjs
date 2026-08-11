@@ -28,7 +28,7 @@ if (!existsSync(ENV_PATH)) {
   process.exit(1);
 }
 
-const key = (process.env.VERIFY_KEY || '').trim() || `dedecel_verify_${randomBytes(24).toString('hex')}`;
+const key = (process.env.VERIFY_KEY || '').trim() || `bidecel_verify_${randomBytes(24).toString('hex')}`;
 
 copyFileSync(ENV_PATH, `${ENV_PATH}.bak`);
 let text = readFileSync(ENV_PATH, 'utf8');

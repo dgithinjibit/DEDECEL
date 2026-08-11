@@ -1,6 +1,6 @@
 import { DeathCertificate, NetworkSpeed, OfflineQueueItem } from '../types';
 
-const STORAGE_KEY_OFFLINE_QUEUE = 'dedecel_offline_sync_queue_v1';
+const STORAGE_KEY_OFFLINE_QUEUE = 'bidecel_offline_sync_queue_v1';
 
 export class OfflineSyncEngine {
   private queue: OfflineQueueItem[] = [];

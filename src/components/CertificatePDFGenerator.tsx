@@ -12,7 +12,7 @@ export const CertificatePDFGenerator: React.FC<CertificatePDFGeneratorProps> = (
   cert,
   onClose
 }) => {
-  const qrValue = `https://dedecel.gov/verify?type=DEATH&id=${cert.id}&tx=${cert.blockchainTxHash || cert.ipfsCid}`;
+  const qrValue = `https://bidecel.gov/verify?type=DEATH&id=${cert.id}&tx=${cert.blockchainTxHash || cert.ipfsCid}`;
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();

@@ -7,7 +7,7 @@
 
   In PRODUCTION the static frontend is hosted separately from the backend (different domains),
   so there is no proxy. We prefix every request with the backend's real URL, provided at build
-  time via VITE_API_BASE_URL (e.g. "https://dedecel-api.onrender.com").
+  time via VITE_API_BASE_URL (e.g. "https://bidecel-api.onrender.com").
 
   Usage:  fetch(apiUrl('/v2/death/records'))
 */

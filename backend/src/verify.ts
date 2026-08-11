@@ -2,6 +2,7 @@ import { Router, RequestHandler } from 'express';
 import { timingSafeEqual } from 'node:crypto';
 import { CertStore, Domain, StoredCert } from './store.js';
 import { poseidonCommitment } from './poseidon.js';
+import { zkAvailable, proveCommitment, verifyProof } from './zk.js';
 
 /*
   EXTERNAL VERIFICATION API  (prefix /verify/v1)
@@ -9,7 +10,7 @@ import { poseidonCommitment } from './poseidon.js';
   WHO THIS IS FOR
   ---------------
   OTHER projects (a partner service, a government verifier, another dApp) that need to confirm a
-  DEDECEL certificate is genuine and anchored on-chain — WITHOUT ever seeing the person's private
+  BIDECEL certificate is genuine and anchored on-chain — WITHOUT ever seeing the person's private
   data. This is deliberately SEPARATE from the internal /v2 API (which can return full PII to the
   app itself). Everything here is read-only and PII-free by construction.
 
@@ -156,7 +157,7 @@ export function createVerifyRouter(store: CertStore): Router {
   });
 
   // Caller submits a hash they hold; we confirm whether it matches a stored, anchored record.
-  // Lets a partner verify "the hash I computed / was given is a real anchored DEDECEL cert".
+  // Lets a partner verify "the hash I computed / was given is a real anchored BIDECEL cert".
   router.post('/check-hash', async (req, res) => {
     const hash = String(req.body?.certHash ?? req.body?.hash ?? '').trim().toLowerCase();
     const domainRaw = String(req.body?.domain ?? '').trim();
@@ -186,6 +187,59 @@ export function createVerifyRouter(store: CertStore): Router {
         }
       }
       return res.json({ matches: false });
+    } catch (err) {
+      res.status(500).json({ error: (err as Error).message });
+    }
+  });
+
+  // Is the ZK proof feature available (circuit artifacts built)?
+  router.get('/zk/status', (_req, res) => {
+    res.json({ zkAvailable: zkAvailable() });
+  });
+
+  // Generate a ZK proof that a stored certificate matches its public Poseidon commitment, WITHOUT
+  // revealing the cert. Demo/testing convenience: proving happens server-side here. In production
+  // the proof would be generated in the user's browser so the witness (PII-derived) never leaves
+  // their device — the /verify-proof route below is what a server/NEAR would actually run.
+  router.post('/prove/:domain/:id', async (req, res) => {
+    if (!zkAvailable()) {
+      return res.status(503).json({ error: 'ZK proofs not available (circuit artifacts not built)' });
+    }
+    const domain = parseDomain(req.params.domain);
+    if (!domain) return res.status(400).json({ error: 'domain must be birth or death' });
+    try {
+      const row = await store.getById(domain, req.params.id);
+      if (!row) return res.status(404).json({ found: false });
+      const { proof, publicSignals, commitment } = await proveCommitment(row.payload, row.salt);
+      // Public output only: the proof + the public commitment. No payload, no salt.
+      res.json({ id: row.id, domain, proof, publicSignals, commitment });
+    } catch (err) {
+      res.status(500).json({ error: (err as Error).message });
+    }
+  });
+
+  // Verify a ZK proof a caller submits. Optionally bind it to a known commitment (the caller can
+  // pass certId+domain to require the proof be FOR that stored certificate's commitment).
+  router.post('/verify-proof', async (req, res) => {
+    if (!zkAvailable()) {
+      return res.status(503).json({ error: 'ZK proofs not available (circuit artifacts not built)' });
+    }
+    const { proof, publicSignals, certId, domain: domainRaw } = req.body ?? {};
+    if (!proof || !Array.isArray(publicSignals)) {
+      return res.status(400).json({ error: 'proof and publicSignals[] are required' });
+    }
+    try {
+      // If the caller names a stored cert, verify the proof is for THAT cert's commitment.
+      let expected: string | undefined;
+      if (certId) {
+        const domain = parseDomain(String(domainRaw ?? ''));
+        if (!domain) return res.status(400).json({ error: 'domain must be birth or death when certId is given' });
+        const row = await store.getById(domain, String(certId));
+        if (!row) return res.status(404).json({ error: 'certId not found' });
+        expected = poseidonCommitment(row.payload, row.salt);
+      }
+      const { valid, commitment } = await verifyProof(proof, publicSignals as string[], expected);
+      res.json({ valid, commitment, boundToCert: certId ? !!expected : false });
     } catch (err) {
       res.status(500).json({ error: (err as Error).message });
     }

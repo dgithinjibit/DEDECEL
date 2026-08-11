@@ -70,7 +70,7 @@ export function hashCertificate(record: unknown, salt: string): string {
   const pepper = getPepper();
   const canonical = canonicalize(record);
   // Domain-separated, delimiter-joined so fields can't be shifted into each other.
-  const input = `dedecel-v1|${pepper}|${salt}|${canonical}`;
+  const input = `bidecel-v1|${pepper}|${salt}|${canonical}`;
   const digest = createHash('sha256').update(input, 'utf8').digest('hex');
   return `0x${digest}`;
 }

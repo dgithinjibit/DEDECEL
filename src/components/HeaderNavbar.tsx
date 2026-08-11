@@ -82,7 +82,7 @@ export const HeaderNavbar: React.FC<HeaderNavbarProps> = ({
               <div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-                    DEDECEL
+                    BIDECEL
                   </span>
                   <span className="bg-cyan-500/10 text-cyan-400 text-[10px] font-semibold px-2 py-0.5 rounded-full border border-cyan-500/30 uppercase tracking-widest">
                     Death Registry

@@ -3,7 +3,7 @@
 # Think of it like package.json in a Node/JS project.
 
 [package]
-name = "dedecel-anchor"
+name = "bidecel-anchor"
 version = "0.1.0"
 edition = "2021"
 

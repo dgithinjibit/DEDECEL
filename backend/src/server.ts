@@ -32,7 +32,7 @@ const near = createNearClient();
 const app = express();
 
 // CORS: in production the frontend is on a different domain, so lock the API to known origins.
-// Set CORS_ORIGINS to a comma-separated allowlist (e.g. "https://dedecel.vercel.app"). If unset,
+// Set CORS_ORIGINS to a comma-separated allowlist (e.g. "https://bidecel.vercel.app"). If unset,
 // allow all origins — convenient for local dev, but set it once the frontend is deployed.
 const corsOrigins = (process.env.CORS_ORIGINS ?? '')
   .split(',')
@@ -71,7 +71,7 @@ function toSummary(row: StoredCert) {
 app.get('/v2/health', (_req, res) => {
   res.json({
     status: 'ok',
-    service: 'dedecel-backend',
+    service: 'bidecel-backend',
     version: '0.1.0',
     store: store.backendName(),
     near: near.status(),
@@ -264,7 +264,7 @@ if (process.env.DEDECEL_NO_LISTEN !== '1') {
   // Free hosts (Render/Railway/Fly) inject PORT — prefer it, then BACKEND_PORT, then 4000 for dev.
   const PORT = Number(process.env.PORT ?? process.env.BACKEND_PORT ?? 4000);
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[dedecel-backend] listening on http://localhost:${PORT}  (store: ${store.backendName()})`);
+    console.log(`[bidecel-backend] listening on http://localhost:${PORT}  (store: ${store.backendName()})`);
   });
 }
 

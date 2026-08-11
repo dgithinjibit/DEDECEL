@@ -1,4 +1,4 @@
-// DEDECEL Starknet Cairo Smart Contract: Zero-Knowledge Death Certificate Verifier
+// BIDECEL Starknet Cairo Smart Contract: Zero-Knowledge Death Certificate Verifier
 // Preserves strict GDPR / HIPAA compliance by verifying cryptographic ZK-STARK proofs on-chain
 // without disclosing Personally Identifiable Information (PII) or sensitive medical history.
 

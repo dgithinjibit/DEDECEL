@@ -8,7 +8,7 @@
   tamper + expiry). Those are the properties that stop a "junk login".
 */
 process.env.AUTH_SECRET = 'test-secret-do-not-use-in-prod';
-process.env.AUTH_RECIPIENT = 'dedecel.testnet';
+process.env.AUTH_RECIPIENT = 'bidecel.testnet';
 
 import express from 'express';
 import type { AddressInfo } from 'node:net';
@@ -54,8 +54,8 @@ async function main() {
   const n1 = await req('GET', '/auth/nonce');
   check('nonce returns 200', n1.status === 200);
   check('nonce is 64 hex chars (32 bytes)', /^[0-9a-f]{64}$/.test(n1.json.nonce));
-  check('nonce carries the login message', n1.json.message === 'Log in to DEDECEL');
-  check('nonce carries the recipient', n1.json.recipient === 'dedecel.testnet');
+  check('nonce carries the login message', n1.json.message === 'Log in to BIDECEL');
+  check('nonce carries the recipient', n1.json.recipient === 'bidecel.testnet');
 
   const n2 = await req('GET', '/auth/nonce');
   check('two nonces differ', n1.json.nonce !== n2.json.nonce);

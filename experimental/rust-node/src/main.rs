@@ -1,4 +1,4 @@
-// DEDECEL Rust Node: Consortium Oracle & Multi-Sig Validator Engine
+// BIDECEL Rust Node: Consortium Oracle & Multi-Sig Validator Engine
 // Handles death record validation, multi-sig oracle verification, and block proposal.
 
 use serde::{Deserialize, Serialize};
@@ -51,7 +51,7 @@ fn calculate_hash(input: &str) -> String {
 async fn health_check() -> impl Responder {
     HttpResponse::Ok().json(serde_json::json!({
         "status": "ONLINE",
-        "service": "DEDECEL Rust Consortium Node",
+        "service": "BIDECEL Rust Consortium Node",
         "consensus": "PoA (Proof of Authority - B2B Hospital & Civil Registry Consortium)",
         "timestamp": Utc::now().to_rfc3339()
     }))
@@ -118,7 +118,7 @@ async fn validate_and_propose_record(
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
     println!("--------------------------------------------------");
-    println!("   DEDECEL Rust Consortium Node Engine Started    ");
+    println!("   BIDECEL Rust Consortium Node Engine Started    ");
     println!("   Listening on 0.0.0.0:8080                      ");
     println!("--------------------------------------------------");
 

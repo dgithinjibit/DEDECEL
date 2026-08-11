@@ -812,7 +812,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dedecel-anchor"
+name = "bidecel-anchor"
 version = "0.1.0"
 dependencies = [
  "near-sdk",

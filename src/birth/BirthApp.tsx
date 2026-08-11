@@ -8,15 +8,15 @@ import { DoctorEntryPortal } from './components/DoctorEntryPortal';
 import { RegistrarPortal } from './components/RegistrarPortal';
 import { FamilyPortal } from './components/FamilyPortal';
 import { AuditorPortal } from './components/AuditorPortal';
-import { DedecelSimulator } from './components/DedecelSimulator';
+import { BidecelSimulator } from './components/BidecelSimulator';
 import { DigitalCertificateModal } from './components/DigitalCertificateModal';
 import { ZkVerifierModal } from './components/ZkVerifierModal';
 import { apiUrl } from '../services/apiBase';
 
 /*
-  BIRTH APP — DeBiCeL's birth-certificate ledger, ported into the merged DEDECEL app.
+  BIRTH APP — DeBiCeL's birth-certificate ledger, ported into the merged BIDECEL app.
 
-  This is DeBiCeL's original top-level App, adapted to run as a SECTION inside DEDECEL:
+  This is DeBiCeL's original top-level App, adapted to run as a SECTION inside BIDECEL:
     - The outer full-screen shell + Navbar + footer were removed (the merged app already
       provides the header, wallet chip, and Death/Birth domain switch around this).
     - Everything else (role router, birth record state, offline sync, modals) is preserved.
@@ -243,7 +243,7 @@ export const BirthApp: React.FC = () => {
           />
         )}
 
-        {activeRole === 'DEBICEL_Simulator' && <DedecelSimulator records={records} />}
+        {activeRole === 'DEBICEL_Simulator' && <BidecelSimulator records={records} />}
       </div>
 
       {/* Modals */}

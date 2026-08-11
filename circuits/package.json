@@ -1,0 +1,16 @@
+{
+  "name": "bidecel-circuits",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "ZK circuits (circom + snarkjs, Groth16/BN254) for BIDECEL certificate proofs.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "prove:example": "node scripts/prove-example.mjs"
+  },
+  "dependencies": {
+    "circomlib": "^2.0.5",
+    "poseidon-lite": "^0.3.0",
+    "snarkjs": "^0.7.5"
+  }
+}

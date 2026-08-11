@@ -1,5 +1,5 @@
 -- ============================================================================
--- DEDECEL / DeBiCeL — off-chain database schema (Supabase Postgres)
+-- BIDECEL / DeBiCeL — off-chain database schema (Supabase Postgres)
 -- ============================================================================
 -- Phase 2 of the roadmap. This database holds the PRIVATE certificate data (PII).
 -- The blockchain (Phase 3) will store ONLY a salted hash per record — never the
