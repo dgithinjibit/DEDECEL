@@ -12,7 +12,8 @@
     "test:api": "tsx src/api.test.ts",
     "test:auth": "tsx src/auth.test.ts",
     "test:verify": "tsx src/verify.test.ts",
-    "test:all": "npm run test:hash && npm run test:store && npm run test:api && npm run test:auth && npm run test:verify",
+    "test:poseidon": "tsx src/poseidon.test.ts",
+    "test:all": "npm run test:hash && npm run test:store && npm run test:api && npm run test:auth && npm run test:verify && npm run test:poseidon",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
@@ -25,6 +26,7 @@
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "near-api-js": "^5.1.1",
+    "poseidon-lite": "^0.3.0",
     "tsx": "^4.21.0"
   },
   "devDependencies": {

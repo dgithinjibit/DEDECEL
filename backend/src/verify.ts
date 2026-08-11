@@ -1,6 +1,7 @@
 import { Router, RequestHandler } from 'express';
 import { timingSafeEqual } from 'node:crypto';
 import { CertStore, Domain, StoredCert } from './store.js';
+import { poseidonCommitment } from './poseidon.js';
 
 /*
   EXTERNAL VERIFICATION API  (prefix /verify/v1)
@@ -51,6 +52,10 @@ function toPublicView(row: StoredCert) {
   return {
     id: row.id,
     certHash: row.cert_hash,          // safe: this is what's anchored on-chain
+    // ZK-friendly Poseidon commitment of the SAME record (see poseidon.ts). Public + safe: it's a
+    // BN254 field element a verifier uses as the public input when checking a ZK proof later. It
+    // reveals nothing about the PII (it's derived through the salted+peppered digest).
+    poseidonCommitment: poseidonCommitment(row.payload, row.salt),
     anchored: !!row.anchor_tx_id,     // has it been sealed on NEAR?
     anchorTxId: row.anchor_tx_id,     // the NEAR tx id (public on the explorer)
     anchoredAt: row.anchored_at,

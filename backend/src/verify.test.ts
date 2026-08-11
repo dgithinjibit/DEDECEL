@@ -13,6 +13,7 @@
 
 // Force the in-memory store regardless of any SUPABASE_* in .env (see store.ts for why).
 process.env.DEDECEL_FORCE_MEMORY_STORE = '1';
+process.env.DEDECEL_HASH_PEPPER ||= 'test-pepper-please-change-in-prod'; // needed by poseidonCommitment
 
 import express from 'express';
 import type { AddressInfo } from 'node:net';
@@ -39,7 +40,7 @@ async function main() {
 
   // Seed two records: one anchored death cert, one un-anchored birth cert. Each carries a
   // `payload` + `salt` we will assert NEVER appear in any response.
-  const SECRET_SALT = 'SALT-must-never-leak';
+  const SECRET_SALT = 'deadbeef'.repeat(8); // 64 hex chars, like generateSalt(); must never leak
   const SECRET_PII = { deceasedName: 'Jane Doe', nationalId: 'NID-777', cause: 'SECRET' };
   await store.insert('DEATH', {
     id: 'CERT-DEATH-1',
@@ -120,6 +121,13 @@ async function main() {
   const goodKey = await req('GET', '/verify/v1/cert/death/CERT-DEATH-1', undefined, { 'x-api-key': 'good-key-2' });
   check('gate: valid key -> 200', goodKey.status === 200);
   check('gate: valid key result correct', goodKey.json.id === 'CERT-DEATH-1');
+
+  // Poseidon commitment: present, a non-empty decimal string, and a valid BN254 field element.
+  const P = 21888242871839275222246405745257275088548364400416034343698204186575808495617n;
+  const pc = String(goodKey.json.poseidonCommitment ?? '');
+  check('cert: exposes poseidonCommitment', pc.length > 0 && /^[0-9]+$/.test(pc));
+  check('cert: commitment is in-field', pc.length > 0 && BigInt(pc) >= 0n && BigInt(pc) < P);
+  check('cert: commitment does NOT leak secrets', !leaksSecrets(goodKey.raw));
 
   const KEY = { 'x-api-key': 'good-key-1' };
 
